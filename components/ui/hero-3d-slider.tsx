@@ -105,26 +105,26 @@ export default function Hero3DSlider({ items, interval = 5000, className, autoPl
   // Pendant le rendu côté serveur ou avant le montage, on utilise un rendu par défaut
   if (!mounted) {
     return (
-      <div className={cn("relative overflow-hidden perspective-container", className)}>
-        <div className="h-full w-full flex items-center justify-center">
-          <div className="absolute w-full h-full flex flex-col items-center justify-center">
-            <div className="relative w-full h-full">
-              <Image
-                src={items[0].image || "/placeholder.svg"}
-                alt={items[0].title}
-                fill
-                className="object-cover rounded-xl opacity-100"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/30 to-transparent" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gold-gradient">{items[0].title}</h1>
-                <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">{items[0].description}</p>
+        <div className={cn("relative overflow-hidden perspective-container", className)}>
+          <div className="h-full w-full flex items-center justify-center">
+            <div className="absolute w-full h-full flex flex-col items-center justify-center">
+              <div className="relative w-full h-full">
+                <Image
+                    src={items[0].image || "/placeholder.svg"}
+                    alt={items[0].title}
+                    fill
+                    className="object-cover rounded-xl opacity-100"
+                    priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-background/20 to-transparent" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 purple-gradient-light">{items[0].title}</h1>
+                  <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">{items[0].description}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     )
   }
 
@@ -132,102 +132,103 @@ export default function Hero3DSlider({ items, interval = 5000, className, autoPl
   const isLight = theme === "light" || resolvedTheme === "light"
 
   return (
-    <div
-      className={cn("relative overflow-hidden perspective-container", className)}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      <div className="h-full w-full flex items-center justify-center">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="absolute w-full h-full flex flex-col items-center justify-center"
-          >
-            <div className="relative w-full h-full">
-              <Image
-                src={items[currentIndex].image || "/placeholder.svg"}
-                alt={items[currentIndex].title}
-                fill
-                className="object-cover rounded-xl opacity-100"
-                priority
-              />
-              <div
-                className={cn(
-                  "absolute inset-0",
-                  isLight
-                    ? "bg-gradient-to-t from-[#8B5A2B]/50 via-[#A0522D]/20 to-transparent"
-                    : "bg-gradient-to-t from-background/80 via-background/30 to-transparent",
-                )}
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                <h1
-                  className={cn(
-                    "text-4xl md:text-6xl lg:text-7xl font-bold mb-6",
-                    isLight ? "text-white drop-shadow-lg" : "gold-gradient",
-                  )}
-                >
-                  {items[currentIndex].title}
-                </h1>
-                <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">
-                  {items[currentIndex].description}
-                </p>
+      <div
+          className={cn("relative overflow-hidden perspective-container w-full h-full", className)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+      >
+        <div className="h-full w-full flex items-center justify-center">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+                key={currentIndex}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute w-full h-full flex flex-col items-center justify-center"
+            >
+              <div className="relative w-full h-full">
+                <Image
+                    src={items[currentIndex].image || "/placeholder.svg"}
+                    alt={items[currentIndex].title}
+                    fill
+                    className="object-cover rounded-none opacity-100"
+                    priority
+                    sizes="100vw"
+                />
+                <div
+                    className={cn(
+                        "absolute inset-0",
+                        isLight
+                            ? "bg-gradient-to-t from-purple-800/25 via-purple-700/10 to-transparent"
+                            : "bg-gradient-to-t from-background/50 via-background/20 to-transparent",
+                    )}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                  <h1
+                      className={cn(
+                          "text-4xl md:text-6xl lg:text-7xl font-bold mb-6",
+                          isLight ? "text-white drop-shadow-lg" : "purple-gradient-light",
+                      )}
+                  >
+                    {items[currentIndex].title}
+                  </h1>
+                  <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">
+                    {items[currentIndex].description}
+                  </p>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-      {/* Navigation buttons */}
-      <button
-        onClick={handlePrevious}
-        className={cn(
-          "absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
-          isLight ? "bg-[#8B5A2B]/70 hover:bg-[#8B5A2B]/90" : "bg-primary/70 hover:bg-primary/90",
-        )}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-      <button
-        onClick={handleNext}
-        className={cn(
-          "absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
-          isLight ? "bg-[#8B5A2B]/70 hover:bg-[#8B5A2B]/90" : "bg-primary/70 hover:bg-primary/90",
-        )}
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
-
-      {/* Navigation dots */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-        {items.map((_, index) => (
-          <button
-            key={index}
+        {/* Navigation buttons */}
+        <button
+            onClick={handlePrevious}
             className={cn(
-              "w-3 h-3 rounded-full transition-all duration-300",
-              index === currentIndex
-                ? isLight
-                  ? "bg-[#8B5A2B] scale-125"
-                  : "bg-primary scale-125"
-                : "bg-white/50 hover:bg-white/80",
+                "absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
+                isLight ? "bg-purple-600/40 hover:bg-purple-600/60" : "bg-primary/50 hover:bg-primary/70",
             )}
-            onClick={() => {
-              setDirection(index > currentIndex ? 1 : -1)
-              setCurrentIndex(index)
-              if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current)
-              }
-            }}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+            aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+            onClick={handleNext}
+            className={cn(
+                "absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
+                isLight ? "bg-purple-600/40 hover:bg-purple-600/60" : "bg-primary/50 hover:bg-primary/70",
+            )}
+            aria-label="Next slide"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Navigation dots */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+          {items.map((_, index) => (
+              <button
+                  key={index}
+                  className={cn(
+                      "w-2 h-2 rounded-full transition-all duration-300",
+                      index === currentIndex
+                          ? isLight
+                              ? "bg-purple-600 scale-110"
+                              : "bg-primary scale-110"
+                          : "bg-white/50 hover:bg-white/80",
+                  )}
+                  onClick={() => {
+                    setDirection(index > currentIndex ? 1 : -1)
+                    setCurrentIndex(index)
+                    if (timeoutRef.current) {
+                      clearTimeout(timeoutRef.current)
+                    }
+                  }}
+                  aria-label={`Go to slide ${index + 1}`}
+              />
+          ))}
+        </div>
       </div>
-    </div>
   )
 }

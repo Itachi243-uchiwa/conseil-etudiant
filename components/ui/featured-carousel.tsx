@@ -26,13 +26,12 @@ interface FeaturedCarouselProps {
 
 export default function FeaturedCarousel({ items, interval = 6000, className }: FeaturedCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(1) // 1 for right, -1 for left
+  const [direction, setDirection] = useState(1)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const { theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Après le montage du composant, on peut accéder au thème côté client
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -93,131 +92,133 @@ export default function FeaturedCarousel({ items, interval = 6000, className }: 
     }),
   }
 
-  // Pendant le rendu côté serveur ou avant le montage, on utilise un rendu par défaut
   if (!mounted) {
     return (
-      <div className={cn("relative overflow-hidden rounded-xl", className)}>
-        <div className="h-full w-full">
-          <div className="absolute w-full h-full">
-            <div className="relative w-full h-full">
-              <Image
-                src={items[0].image || "/placeholder.svg"}
-                alt={items[0].title}
-                fill
-                className="object-cover opacity-100"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/30 to-transparent" />
-              <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white drop-shadow-lg">{items[0].title}</h2>
-                <p className="text-lg text-white drop-shadow-md max-w-2xl mb-6">{items[0].description}</p>
-                <LuxuryButton asChild variant="gold">
-                  <Link href={items[0].link}>{items[0].linkText}</Link>
-                </LuxuryButton>
+        <div className={cn("relative overflow-hidden rounded-xl text-white", className)}>
+          <div className="h-full w-full">
+            <div className="absolute w-full h-full">
+              <div className="relative w-full h-full">
+                <Image
+                    src={items[0].image || "/placeholder.svg"}
+                    alt={items[0].title}
+                    fill
+                    className="object-cover opacity-100"
+                    priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/30 to-transparent" />
+                <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white drop-shadow-lg">
+                    {items[0].title}
+                  </h2>
+                  <p className="text-lg text-white drop-shadow-md max-w-2xl mb-6">
+                    {items[0].description}
+                  </p>
+                  <LuxuryButton asChild variant="gold">
+                    <Link href={items[0].link}>{items[0].linkText}</Link>
+                  </LuxuryButton>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     )
   }
 
-  // Après le montage, on peut utiliser le thème pour le rendu
   const isLight = theme === "light" || resolvedTheme === "light"
 
   return (
-    <div
-      className={cn("relative overflow-hidden rounded-xl", className)}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      <div className="h-full w-full">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="absolute w-full h-full"
-          >
-            <div className="relative w-full h-full">
-              <Image
-                src={items[currentIndex].image || "/placeholder.svg"}
-                alt={items[currentIndex].title}
-                fill
-                className="object-cover opacity-100"
-                priority
-              />
-              <div
-                className={cn(
-                  "absolute inset-0",
-                  isLight
-                    ? "bg-gradient-to-t from-[#8B5A2B]/50 via-[#A0522D]/20 to-transparent"
-                    : "bg-gradient-to-t from-background/80 via-background/30 to-transparent",
-                )}
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white drop-shadow-lg">
-                  {items[currentIndex].title}
-                </h2>
-                <p className="text-lg text-white drop-shadow-md max-w-2xl mb-6">{items[currentIndex].description}</p>
-                <LuxuryButton asChild variant="gold">
-                  <Link href={items[currentIndex].link}>{items[currentIndex].linkText}</Link>
-                </LuxuryButton>
+      <div
+          className={cn("relative overflow-hidden rounded-xl", className)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+      >
+        <div className="h-full w-full">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+                key={currentIndex}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="absolute w-full h-full"
+            >
+              <div className="relative w-full h-full">
+                <Image
+                    src={items[currentIndex].image || "/placeholder.svg"}
+                    alt={items[currentIndex].title}
+                    fill
+                    className="object-cover opacity-100"
+                    priority
+                />
+                <div
+                    className={cn(
+                        "absolute inset-0",
+                        isLight
+                            ? "bg-gradient-to-t from-[#6f4aa6]/20 via-[#6f4aa6]/20 to-transparent"
+                            : "bg-gradient-to-t from-background/80 via-background/30 to-transparent"
+                    )}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white drop-shadow-lg">
+                    {items[currentIndex].title}
+                  </h2>
+                  <p className="text-lg text-white drop-shadow-md max-w-2xl mb-6 !text-white">
+                    {items[currentIndex].description}
+                  </p>
+                  <LuxuryButton asChild variant="gold">
+                    <Link href={items[currentIndex].link}>{items[currentIndex].linkText}</Link>
+                  </LuxuryButton>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-      {/* Navigation buttons */}
-      <button
-        onClick={handlePrevious}
-        className={cn(
-          "absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
-          isLight ? "bg-[#8B5A2B]/70 hover:bg-[#8B5A2B]/90" : "bg-black/30 hover:bg-black/50",
-        )}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-      <button
-        onClick={handleNext}
-        className={cn(
-          "absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
-          isLight ? "bg-[#8B5A2B]/70 hover:bg-[#8B5A2B]/90" : "bg-black/30 hover:bg-black/50",
-        )}
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
-
-      {/* Navigation dots */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-        {items.map((_, index) => (
-          <button
-            key={index}
+        <button
+            onClick={handlePrevious}
             className={cn(
-              "w-3 h-3 rounded-full transition-all duration-300",
-              index === currentIndex
-                ? isLight
-                  ? "bg-[#8B5A2B] scale-125"
-                  : "bg-primary scale-125"
-                : "bg-white/50 hover:bg-white/80",
+                "absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
+                isLight ? "bg-[#6f4aa6]/70 hover:bg-[#6f4aa6]/90" : "bg-black/30 hover:bg-black/50"
             )}
-            onClick={() => {
-              setDirection(index > currentIndex ? 1 : -1)
-              setCurrentIndex(index)
-              if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current)
-              }
-            }}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+            aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+            onClick={handleNext}
+            className={cn(
+                "absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white rounded-full p-2 backdrop-blur-sm transition-all",
+                isLight ? "bg-[#6f4aa6]/70 hover:bg-[#6f4aa6]/90" : "bg-black/30 hover:bg-black/50"
+            )}
+            aria-label="Next slide"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+          {items.map((_, index) => (
+              <button
+                  key={index}
+                  className={cn(
+                      "w-3 h-3 rounded-full transition-all duration-300",
+                      index === currentIndex
+                          ? isLight
+                              ? "bg-[#6f4aa6] scale-125"
+                              : "bg-primary scale-125"
+                          : "bg-white/50 hover:bg-white/80"
+                  )}
+                  onClick={() => {
+                    setDirection(index > currentIndex ? 1 : -1)
+                    setCurrentIndex(index)
+                    if (timeoutRef.current) {
+                      clearTimeout(timeoutRef.current)
+                    }
+                  }}
+                  aria-label={`Go to slide ${index + 1}`}
+              />
+          ))}
+        </div>
       </div>
-    </div>
   )
 }

@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "Conseil Étudiant HE2B",
   description: "Site officiel du Conseil Étudiant HE2B",
-    generator: 'v0.dev'
+    generator: 'Martinez Muzela'
 }
 
 export default function RootLayout({
@@ -21,11 +21,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning className="light">
-      <body className={`${inter.className} min-h-screen bg-background antialiased`}>
+      <body className={`${inter.className} min-h-screen w-screen bg-background antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 w-screen">{children}</main>
             <Footer />
           </div>
           <Toaster />

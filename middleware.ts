@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { parse } from "path"
 
 // Définition des types de contenu et leurs stratégies de cache
 const CACHE_STRATEGIES = {
@@ -42,7 +41,7 @@ export function middleware(request: NextRequest) {
   let cacheStrategy: string
 
   // Vérifier si c'est un asset statique
-  const extension = parse(url).ext.toLowerCase()
+  const extension = (url.match(/(\.[a-z0-9]+)$/i)?.[1] || '').toLowerCase()
   if (STATIC_ASSET_EXTENSIONS.includes(extension)) {
     cacheStrategy = CACHE_STRATEGIES.staticAssets
   }

@@ -579,3 +579,24 @@
 .light .text-muted-foreground {
   color: hsl(262 53% 55% / 0.8);
 }
+
+/* Add this to your global CSS file */
+.purple-gradient {
+  background: linear-gradient(to right, #7e3af2, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+/* Add this to your global CSS file */
+.purple-gradient {
+  background: linear-gradient(to right, #7e3af2, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.perspective-container {
+  perspective: 1000px;
+}

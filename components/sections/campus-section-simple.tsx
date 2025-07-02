@@ -30,13 +30,6 @@ export default function CampusSectionSimple() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <div className="flex justify-center mb-8">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Capture%20d%E2%80%99%C3%A9cran%20du%202025-04-19%2010-57-50-z7PX4o2MYtHrgWJGLGsuMbWOJjPrbp.png"
-              alt="Logo CE HE2B"
-              className="h-16 md:h-20"
-            />
-          </div>
 
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-[#3F3290] dark:gold-text">Conseil Étudiant HE2B</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Votre voix au sein de l'institution</p>

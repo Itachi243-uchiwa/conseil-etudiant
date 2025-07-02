@@ -16,10 +16,11 @@ export default function LegalPage() {
           <p className="mb-2">
             <strong>Conseil Étudiant HE2B</strong>
           </p>
-          <p className="mb-2">Avenue Émile Gryzon 1</p>
-          <p className="mb-2">1070 Bruxelles</p>
+          <p className="mb-2">Rue Royal 150</p>
+          <p className="mb-2">1000 Bruxelles</p>
           <p className="mb-2">Belgique</p>
-          <p className="mb-2">Email : contact@cehe2b.be</p>
+          <p className="mb-2">Email : bureau-@cehe2b.be</p>
+          <p className="mb-2">Email : ce@he2b.be</p>
           <p className="mb-2">Téléphone : +32 12 345 678</p>
         </section>
 

@@ -51,7 +51,6 @@ export default function Header() {
       <div className="container flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2" prefetch={true}>
           <LogoDore className="h-10 w-auto" />
-          <span className="font-bold text-xl hidden sm:inline-block text-[#3F3290]">CE HE2B</span>
         </Link>
 
         {/* Desktop Navigation */}

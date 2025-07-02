@@ -21,8 +21,6 @@ export default function JoinSection() {
     setMounted(true)
   }, [])
 
-  // Utiliser le même rendu pour le serveur et le client non-monté
-  // Utiliser le style dark par défaut (qui est le thème par défaut)
   const isLight = mounted && theme === "light"
 
   return (

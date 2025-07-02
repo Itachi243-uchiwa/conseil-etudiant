@@ -8,30 +8,28 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['v0.blob.com'], // Ajoutez ici les domaines externes pour les images
+    domains: ['v0.blob.com'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     unoptimized: true,
   },
   experimental: {
-    optimizeCss: true, // Optimise les CSS
-    optimizePackageImports: ['lucide-react', '@/components/ui'], // Optimise les imports de packages
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@/components/ui'],
   },
-  // Optimisation du cache des pages statiques
-  staticPageGenerationTimeout: 120, // 2 minutes
-  // Configuration des headers pour les assets statiques
+  staticPageGenerationTimeout: 120,
   async headers() {
     return [
       {
-        source: '/(.*).(?:jpg|jpeg|png|svg|webp|avif|ico|css|js)',
+        source: "/:path*",  // Applique à toutes les routes
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,PUT,DELETE,OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization" },
         ],
       },
-    ]
+      // ... vos autres règles de cache
+    ];
   },
 }
 

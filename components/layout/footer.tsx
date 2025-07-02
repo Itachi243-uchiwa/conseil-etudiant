@@ -10,7 +10,6 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <LogoDore className="h-10 w-auto" />
-              <span className="font-bold text-xl text-[#3F3290]">CE HE2B</span>
             </div>
             <p className="text-muted-foreground">
               Le Conseil Étudiant de la Haute École Bruxelles-Brabant, votre voix au sein de l'institution.
@@ -175,11 +174,18 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-[#3F3290]" />
                 <a
-                  href="mailto:contact@cehe2b.be"
+                  href="mailto:bureau-@cehe2b.be"
                   className="text-muted-foreground hover:text-[#3F3290] transition-colors"
                 >
-                  contact@cehe2b.be
+                  bureau-@cehe2b.be
                 </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-[#3F3290]" />
+                <a
+                    href="mailto:bureau-@cehe2b.be"
+                    className="text-muted-foreground hover:text-[#3F3290] transition-colors"
+                > ce@he2b.be </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-[#3F3290]" />
@@ -188,10 +194,10 @@ export default function Footer() {
                 </a>
               </li>
               <li className="text-muted-foreground mt-2">
-                Campus HELB
+                Campus ISIB
                 <br />
-                Avenue Émile Gryzon 1<br />
-                1070 Bruxelles
+                Rue Royale 150, <br />
+                1000 Bruxelles,
               </li>
             </ul>
           </div>

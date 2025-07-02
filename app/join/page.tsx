@@ -1,160 +1,152 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { CheckCircle } from "lucide-react"
 import ParallaxBackground from "@/components/ui/parallax-background"
+import { LuxuryHeading } from "@/components/ui/luxury-heading"
+import { LuxuryButton } from "@/components/ui/luxury-button"
+import { Card, CardContent } from "@/components/ui/card"
 
 export const metadata: Metadata = {
   title: "Rejoindre | Conseil Étudiant HE2B",
   description: "Rejoignez le Conseil Étudiant HE2B et contribuez à améliorer la vie étudiante",
 }
 
-const benefits = [
-  "Développer vos compétences en communication, gestion de projet et leadership",
-  "Participer activement à la vie étudiante et à l'amélioration de votre école",
-  "Rencontrer des étudiants de tous les campus et de toutes les sections",
-  "Acquérir une expérience valorisante pour votre CV",
-  "Être au cœur des décisions qui concernent les étudiants",
-  "Organiser des événements et des projets qui vous tiennent à cœur",
-]
-
-const positions = [
-  {
-    title: "Représentant de section",
-    description: "Représenter les étudiants de votre section auprès du Conseil Étudiant et des autorités académiques.",
-    requirements:
-      "Être étudiant dans la section concernée, avoir un bon sens de la communication et être à l'écoute des autres.",
-  },
-  {
-    title: "Responsable communication",
-    description:
-      "Gérer la communication du Conseil Étudiant sur les réseaux sociaux, le site web et les supports physiques.",
-    requirements:
-      "Avoir des compétences en communication, maîtriser les réseaux sociaux et avoir un bon sens de la créativité.",
-  },
-  {
-    title: "Responsable événements",
-    description: "Organiser et coordonner les événements du Conseil Étudiant tout au long de l'année académique.",
-    requirements:
-      "Être organisé, créatif et avoir un bon sens du relationnel. Une expérience dans l'organisation d'événements est un plus.",
-  },
-  {
-    title: "Responsable services aux étudiants",
-    description:
-      "Coordonner les différents services proposés par le Conseil Étudiant et veiller à leur bon fonctionnement.",
-    requirements:
-      "Être à l'écoute des besoins des étudiants, avoir un bon sens de l'organisation et être capable de travailler en équipe.",
-  },
-]
-
-const steps = [
-  {
-    title: "Candidature",
-    description:
-      "Envoyez votre CV et une lettre de motivation à recrutement@cehe2b.be en précisant le poste qui vous intéresse.",
-  },
-  {
-    title: "Entretien",
-    description:
-      "Si votre candidature est retenue, vous serez convié à un entretien avec les membres du Conseil Étudiant.",
-  },
-  {
-    title: "Intégration",
-    description:
-      "Si vous êtes sélectionné, vous intégrerez l'équipe du Conseil Étudiant et bénéficierez d'une formation pour vous familiariser avec vos nouvelles responsabilités.",
-  },
-]
-
 export default function JoinPage() {
   return (
-    <div className="relative">
-      <ParallaxBackground />
+      <div className="relative">
+        <ParallaxBackground />
 
-      <div className="container py-12 md:py-20">
-        <div className="max-w-4xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Rejoignez-nous</h1>
-          <p className="text-xl text-muted-foreground">
-            Vous souhaitez vous investir dans la vie étudiante de la HE2B ? Rejoignez le Conseil Étudiant ! Nous
-            recherchons des étudiants motivés et engagés pour représenter leurs camarades et contribuer à l'amélioration
-            de la vie étudiante à la HE2B.
-          </p>
-        </div>
+        <div className="container py-12 md:py-20">
+          <div className="max-w-4xl mx-auto mb-16">
+            <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 text-center">
+              Rejoindre le Conseil Étudiant
+            </LuxuryHeading>
+            <p className="text-xl text-muted-foreground text-center mb-12">
+              Tu souhaites t'impliquer dans la vie étudiante de la HE2B ? Rejoins le Conseil Étudiant !
+            </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-          <div className="perspective-container order-2 lg:order-1">
-            <div className="card-3d card-shine rounded-lg overflow-hidden">
-              <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="Rejoindre le Conseil Étudiant"
-                width={800}
-                height={600}
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
-          <div className="order-1 lg:order-2">
-            <h2 className="text-2xl font-bold mb-6">Pourquoi rejoindre le Conseil Étudiant ?</h2>
-            <div className="space-y-4">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start">
-                  <CheckCircle className="h-6 w-6 text-primary mr-3 flex-shrink-0 mt-0.5" />
-                  <p>{benefit}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Postes à pourvoir</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {positions.map((position, index) => (
-              <Card key={index} className="tilt-on-hover card-shine h-full">
-                <CardHeader>
-                  <CardTitle>{position.title}</CardTitle>
-                  <CardDescription>{position.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <h4 className="font-semibold mb-2">Prérequis :</h4>
-                  <p className="text-muted-foreground">{position.requirements}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Comment postuler ?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
-              <Card key={index} className="tilt-on-hover card-shine h-full">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    <span className="text-xl font-bold text-primary">{index + 1}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              <Card className="tilt-on-hover card-shine h-full flex flex-col">
+                <div className="relative aspect-video overflow-hidden rounded-t-lg">
+                  <Image
+                      src="/election.png?height=600&width=600&text=Élections+Étudiantes"
+                      alt="Élections Étudiantes"
+                      fill
+                      className="object-cover transition-transform hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 flex flex-col justify-end p-6">
+                    <h2 className="text-2xl font-bold text-white mb-2">Par élections</h2>
+                    <p className="text-white/90 mb-4">
+                      Fais entendre ta voix et représente tes camarades en te présentant aux élections étudiantes.
+                    </p>
                   </div>
-                  <CardTitle>{step.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{step.description}</p>
+                </div>
+                <CardContent className="flex-grow p-6 flex flex-col justify-between">
+                  <div>
+                    <p className="mb-4">
+                      Les élections étudiantes sont un moment clé pour la démocratie à la HE2B. Chaque année, tu as
+                      l'occasion de voter pour choisir tes représentant·e·s, celles et ceux qui porteront ta voix et
+                      défendront tes droits dans les instances de l'école.
+                    </p>
+                    <p className="mb-4">
+                      En votant, tu participes activement à améliorer ton environnement académique et à renforcer la
+                      représentation de tous les étudiant·e·s.
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <LuxuryButton asChild variant="gold" className="w-full">
+                      <Link href="/elections">En savoir plus sur les élections</Link>
+                    </LuxuryButton>
+                  </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
 
-        <div className="bg-muted/30 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Prêt à rejoindre l'aventure ?</h2>
-          <p className="mb-6 max-w-2xl mx-auto">
-            Si vous êtes intéressé par l'un de ces postes ou si vous avez des questions, n'hésitez pas à nous contacter.
-            Nous serons ravis de vous accueillir dans notre équipe !
-          </p>
-          <Button asChild size="lg">
-            <Link href="mailto:recrutement@cehe2b.be">Postuler maintenant</Link>
-          </Button>
+              <Card className="tilt-on-hover card-shine h-full flex flex-col">
+                <div className="relative aspect-video overflow-hidden rounded-t-lg">
+                  <Image
+                      src="/cooptation.jpg?height=400&width=600&text=Cooptation"
+                      alt="Cooptation"
+                      fill
+                      className="object-cover transition-transform hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 flex flex-col justify-end p-6">
+                    <h2 className="text-2xl font-bold text-white mb-2">Par cooptation</h2>
+                    <p className="text-white/90 mb-4">
+                      Rejoins notre équipe en cours d'année pour renforcer nos rangs ou pour un projet spécifique.
+                    </p>
+                  </div>
+                </div>
+                <CardContent className="flex-grow p-6 flex flex-col justify-between">
+                  <div>
+                    <p className="mb-4">
+                      La cooptation est un processus interne par lequel le Conseil Étudiant peut désigner une personne
+                      pour rejoindre ses rangs en cas de poste vacant ou de besoin spécifique.
+                    </p>
+                    <p className="mb-4">
+                      Ce mode de sélection, validé par les membres en place, permet d'assurer la continuité et
+                      l'efficacité de l'équipe, tout en intégrant des étudiant·e·s motivé·e·s et compétent·e·s.
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <LuxuryButton asChild variant="gold" className="w-full">
+                      <Link href="/cooptation">Postuler par cooptation</Link>
+                    </LuxuryButton>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-primary/20">
+              <h2 className="text-2xl font-bold mb-6 text-center text-primary">Pourquoi nous rejoindre ?</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">Développe tes compétences</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Leadership et travail d'équipe</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Communication et négociation</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Gestion de projet et organisation d'événements</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Connaissance des institutions et de leur fonctionnement</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">Fais la différence</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Défends les droits et intérêts des étudiant·e·s</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Contribue à améliorer la vie étudiante</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Participe aux décisions importantes de l'école</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary font-bold mr-2">•</span>
+                      <span>Crée des liens et élargis ton réseau</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   )
 }

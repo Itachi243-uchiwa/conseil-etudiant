@@ -80,7 +80,7 @@ export default function AboutSection() {
           >
             <div className="absolute inset-0 border-2 border-primary/20 rounded-lg"></div>
             <Image
-              src="/placeholder.svg?height=600&width=800"
+              src="/histoire/histoire.jpg?height=600&width=800"
               alt="Équipe du Conseil Étudiant"
               fill
               className="object-cover"
