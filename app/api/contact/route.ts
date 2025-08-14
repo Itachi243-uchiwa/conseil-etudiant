@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY || 're_5eAWaRqB_BbVh1HJLyqGEbuWg2wCH7uAR')
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Configuration des emails
 const EMAIL_CONFIG = {
