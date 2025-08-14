@@ -6,7 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Info, Shield, Users } from "lucide-react"
 import { LuxuryButton } from "@/components/ui/luxury-button"
-import { LuxuryHeading } from "@/components/ui/luxury-heading" // Importation corrigée
+import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import LuxuryCard from "@/components/ui/luxury-card"
 
 const missions = [

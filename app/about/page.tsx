@@ -235,7 +235,8 @@ export default async function AboutPage() {
             </TabsContent>
           </Tabs>
 
-          <div className="mb-16">
+          {/* Section Notre équipe avec ID pour l'ancrage */}
+          <div id="notre_equipe" className="mb-16">
             <h2 className="text-3xl font-bold mb-8 text-center">Notre équipe</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {teamMembers.map((member) => (
