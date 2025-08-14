@@ -9,7 +9,7 @@ const EMAIL_CONFIG = {
     from: 'onboarding@resend.dev',
     to: 'bureau-ce@he2b.be',
     fallbackTo: 'ce@he2b.be',
-    delayBetweenEmails: 1000, // 1 seconde entre les envois
+    delayBetweenEmails: 1000,
 }
 
 // Types
