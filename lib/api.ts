@@ -5,7 +5,7 @@ export interface ApiOptions extends RequestInit {
 
 // Configuration de l'API
 const API_CONFIG = {
-    baseUrl: process.env.BACK_PUBLIC_API_URL,
+    baseUrl: process.env.NEXT_PUBLIC_BACK_PUBLIC_API_URL,
     timeout: 10000,
     retries: 3,
 } as const
