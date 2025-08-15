@@ -261,7 +261,7 @@ export async function getMissionById(id: number) {
 // ==================== CAMPUS ====================
 export async function getCampus() {
     try {
-        return await fetchAPI("/api/campus")  // ✅ Corrigé avec /api/campus
+        return await fetchAPI("/api/campus")
     } catch (error) {
         console.error("Error fetching campus:", error)
         return []
@@ -326,7 +326,7 @@ export async function getOfficeMembers() {
 // ==================== ÉVÉNEMENTS ====================
 export async function getEvents() {
     try {
-        return await fetchAPI("/api/events")  // ✅ Corrigé avec /api/events
+        return await fetchAPI("/api/events")
     } catch (error) {
         console.error("Error fetching events:", error)
         return []

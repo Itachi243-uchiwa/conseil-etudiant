@@ -29,7 +29,8 @@ export const metadata: Metadata = {
 }
 
 export default async function CampusPage() {
-  const campuses: CampusDto[] = await getCampus()
+  const campuses: CampusDto[] = await getCampus();
+  console.log(getCampus)
 
   return (
       <div className="relative">
@@ -52,7 +53,7 @@ export default async function CampusPage() {
                         className="h-full transition-all duration-300 hover:shadow-lg group-hover:transform group-hover:scale-[1.02] border-2"
                         style={{
                           borderColor: `${cleanedColor}66`, 
-                          boxShadow: `0 4px 6px -1px ${cleanedColor}33`, // 20% opacity
+                          boxShadow: `0 4px 6px -1px ${cleanedColor}33`,
                         }}
                     >
                       <CardContent className="p-6 flex flex-col items-center">
