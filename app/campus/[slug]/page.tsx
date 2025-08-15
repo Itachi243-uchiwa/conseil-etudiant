@@ -86,7 +86,6 @@ export default async function CampusDetailPage({ params }: Props) {
 
         <div className="container py-12 md:py-20">
           <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-            <CampusLogo campus={campus.slug as any} className="w-40 h-40 md:w-48 md:h-48" />
 
             <div>
               <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-4">
