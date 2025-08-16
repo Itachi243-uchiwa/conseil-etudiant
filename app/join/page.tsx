@@ -65,7 +65,7 @@ export default function JoinPage() {
               <Card className="tilt-on-hover card-shine h-full flex flex-col">
                 <div className="relative aspect-video overflow-hidden rounded-t-lg">
                   <Image
-                      src="/cooptation.jpg?height=400&width=600&text=Cooptation"
+                      src="/cooptation.webp?height=400&width=600&text=Cooptation"
                       alt="Cooptation"
                       fill
                       className="object-cover transition-transform hover:scale-105"

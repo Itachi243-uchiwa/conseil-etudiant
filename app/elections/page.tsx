@@ -43,7 +43,7 @@ export default function ElectionsPage() {
                     </div>
                     <div className="relative aspect-video rounded-xl overflow-hidden">
                         <Image
-                            src="/placeholder.svg?height=600&width=800&text=Élections+Étudiantes"
+                            src="/election.png?height=600&width=800&text=Élections+Étudiantes"
                             alt="Élections étudiantes"
                             fill
                             className="object-cover"

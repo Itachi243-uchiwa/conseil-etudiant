@@ -110,7 +110,6 @@ Message envoyé via le formulaire de cooptation du site web.`
                 availability: "",
             })
 
-            // Réinitialiser le message de succès après 7 secondes
             setTimeout(() => setIsSuccess(false), 7000)
 
         } catch (err) {
