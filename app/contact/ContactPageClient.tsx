@@ -83,7 +83,7 @@ export default function ContactPageClient() {
                 <Phone className="h-6 w-6 text-[#3F3290] mt-1" />
                 <div>
                   <h3 className="font-semibold text-lg">Téléphone</h3>
-                  <p className="text-muted-foreground">+32 12 345 678</p>
+                  <p className="text-muted-foreground">+32 495 79 99 75</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">

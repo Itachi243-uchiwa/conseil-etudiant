@@ -179,7 +179,7 @@ export default async function Footer() {
                             <li className="flex items-center gap-2">
                                 <Phone className="h-4 w-4 text-[#3F3290]" />
                                 <a href="tel:+3212345678" className="text-muted-foreground hover:text-[#3F3290] transition-colors">
-                                    +32 12 345 678
+                                    +32 495 79 99 75
                                 </a>
                             </li>
                             <li className="text-muted-foreground mt-2">
