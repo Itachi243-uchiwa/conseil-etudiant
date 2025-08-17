@@ -15,7 +15,7 @@ export const metadata: Metadata = generateMetadata({
     description: "Découvrez la vie étudiante à la HE2B à travers nos vlogs, interviews exclusives et récapitulatifs d'événements. Plongez dans l'univers étudiant !",
     keywords: ['vlog', 'vidéos', 'vie étudiante', 'interviews', 'événements', 'campus', 'CE HE2B TV'],
     url: '/vlog',
-    type: 'video'
+    type: 'website' // ✅ Changé de 'video' vers 'website'
 });
 
 export default async function VlogPage() {
