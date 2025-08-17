@@ -14,7 +14,7 @@ export const metadata: Metadata = generateMetadata({
     title: "Événements Étudiants - Calendrier et Activités HE2B",
     description: "Découvrez tous les événements organisés par le Conseil Étudiant HE2B : soirées, conférences, activités culturelles et sportives. Ne manquez rien de la vie étudiante !",
     keywords: ['événements', 'activités étudiantes', 'soirées', 'conférences', 'culture', 'sport', 'calendrier'],
-    url: '/evenements'
+    url: '/events'
 });
 
 interface Event {
@@ -170,7 +170,7 @@ export default async function EventsPage() {
                                                             variant="outline"
                                                             className="border-primary/30 hover:border-primary/60 flex-1"
                                                         >
-                                                            <Link href={`/evenements/${event.slug}`} aria-label={`En savoir plus sur ${event.title}`}>
+                                                            <Link href={`/events/${event.slug}`} aria-label={`En savoir plus sur ${event.title}`}>
                                                                 En savoir plus
                                                             </Link>
                                                         </LuxuryButton>
