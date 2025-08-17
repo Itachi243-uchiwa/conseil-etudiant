@@ -4,7 +4,6 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ParallaxBackground from "@/components/ui/parallax-background"
-import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import { Button } from "@/components/ui/button"
 import {
     Shield,
@@ -69,6 +68,7 @@ const getIconComponent = (iconName: string) => {
 
 export default async function AboutPage() {
     const teamMembers: TeamMemberDto[] = await getOfficeMembers()
+    console.log(teamMembers)
     const missions: MissionDto[] = await getMissions()
     const missionImages = missions.slice(0, 3)
 
