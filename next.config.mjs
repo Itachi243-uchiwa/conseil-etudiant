@@ -17,7 +17,6 @@ const nextConfig = {
         optimizeCss: true,
         optimizePackageImports: ['lucide-react', '@/components/ui'],
     },
-    output: 'export',
     staticPageGenerationTimeout: 120,
     async headers() {
         return [
