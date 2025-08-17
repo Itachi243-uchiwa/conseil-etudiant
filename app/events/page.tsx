@@ -200,7 +200,7 @@ export default async function EventsPage() {
                             </>
                         )}
 
-                        <section className="bg-muted/30 rounded-lg p-8 animated-border" aria-labelledby="propose-event">
+                        <section className="bg-muted/30 rounded-lg p-8 relative z-10" aria-labelledby="propose-event">
                             <h2 id="propose-event" className="text-2xl font-bold mb-4">
                                 Proposer un Événement
                             </h2>
@@ -208,9 +208,11 @@ export default async function EventsPage() {
                                 Vous avez une idée d'événement que vous aimeriez voir organisé par le Conseil Étudiant ? N'hésitez pas à
                                 nous en faire part ! Nous sommes toujours à la recherche de nouvelles idées pour animer la vie étudiante.
                             </p>
-                            <LuxuryButton asChild>
-                                <Link href="/contact">Nous contacter</Link>
-                            </LuxuryButton>
+                            <div className="relative z-20">
+                                <LuxuryButton asChild>
+                                    <Link href="/contact">Nous contacter</Link>
+                                </LuxuryButton>
+                            </div>
                         </section>
                     </main>
                 </div>

@@ -113,7 +113,7 @@ export default function PrivacyPage() {
             <h2>9. Contact</h2>
             <p>
               Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à
-              l'adresse email suivante : privacy@cehe2b.be
+              l'adresse email suivante : info@cehe2b.be
             </p>
           </div>
         </div>

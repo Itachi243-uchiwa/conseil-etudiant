@@ -21,7 +21,8 @@ export default function LegalPage() {
           <p className="mb-2">Belgique</p>
           <p className="mb-2">Email : bureau-@cehe2b.be</p>
           <p className="mb-2">Email : ce@he2b.be</p>
-          <p className="mb-2">Téléphone : +32 12 345 678</p>
+          <p className="mb-2">Email : info@cehe2b.be</p>
+          <p className="mb-2">Téléphone : 32 495 79 99 75</p>
         </section>
 
         <section>

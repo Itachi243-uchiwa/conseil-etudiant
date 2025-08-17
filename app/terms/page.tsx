@@ -91,7 +91,7 @@ export default function TermsPage() {
             <h2>8. Contact</h2>
             <p>
               Si vous avez des questions concernant ces conditions d'utilisation, veuillez nous contacter à l'adresse
-              email suivante : contact@cehe2b.be
+              email suivante : info@cehe2b.be
             </p>
           </div>
         </div>

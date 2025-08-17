@@ -77,6 +77,7 @@ export default function ContactPageClient() {
                   <h3 className="font-semibold text-lg">Email</h3>
                   <p className="text-muted-foreground">bureau-@cehe2b.be</p>
                   <p className="text-muted-foreground">ce@he2b.be</p>
+                  <p className="text-muted-foreground">info@cehe2b.be</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
