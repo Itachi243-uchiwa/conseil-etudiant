@@ -33,28 +33,28 @@ export default function CampusSectionSimple() {
     ]
 
     return (
-        <section ref={ref} className="py-20 relative overflow-hidden">
-            {/* Background animé */}
-            <div className="absolute inset-0">
+        <section ref={ref} className="py-8 md:py-12 lg:py-20 relative overflow-hidden">
+            {/* Background animé - hidden on mobile */}
+            <div className="absolute inset-0 hidden md:block">
                 <motion.div
                     animate={{
                         backgroundPosition: ["0% 0%", "100% 100%"],
                     }}
                     transition={{
                         duration: 20,
-                        repeat: Infinity,
-                        ease: "linear"
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: "linear",
                     }}
                     className="absolute inset-0 opacity-10"
                     style={{
                         backgroundImage: isDark
                             ? `radial-gradient(circle at 25% 25%, #6366f1 0%, transparent 50%), radial-gradient(circle at 75% 75%, #8b5cf6 0%, transparent 50%)`
                             : `radial-gradient(circle at 25% 25%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 75% 75%, #6366f1 0%, transparent 50%)`,
-                        backgroundSize: "400% 400%"
+                        backgroundSize: "400% 400%",
                     }}
                 />
 
-                {/* Particules flottantes */}
+                {/* Particules flottantes - desktop only */}
                 {[...Array(8)].map((_, i) => (
                     <motion.div
                         key={i}
@@ -65,13 +65,13 @@ export default function CampusSectionSimple() {
                         }}
                         transition={{
                             duration: 6 + i,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut",
-                            delay: i * 0.8
+                            delay: i * 0.8,
                         }}
                         className="absolute w-2 h-2 rounded-full"
                         style={{
-                            background: isDark ? '#8b5cf6' : '#6366f1',
+                            background: isDark ? "#8b5cf6" : "#6366f1",
                             left: `${10 + i * 11}%`,
                             top: `${20 + (i % 3) * 30}%`,
                         }}
@@ -79,26 +79,26 @@ export default function CampusSectionSimple() {
                 ))}
             </div>
 
-            <div className="container text-center px-4 relative z-10">
-                {/* Header avec animation 3D */}
+            <div className="container text-center px-4 md:px-6 relative z-10">
+                {/* Header desktop uniquement - masqué sur mobile */}
                 <motion.div
                     initial={{ opacity: 0, y: 40, rotateX: 20 }}
                     animate={inView ? { opacity: 1, y: 0, rotateX: 0 } : { opacity: 0, y: 40, rotateX: 20 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="mb-16"
+                    className="mb-8 md:mb-10 lg:mb-16 hidden md:block"
                 >
                     <motion.h2
-                        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-[#3F3290] via-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent"
+                        className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-[#3F3290] via-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent"
                         animate={{
                             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                         }}
                         transition={{
                             duration: 5,
-                            repeat: Infinity,
-                            ease: "linear"
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: "linear",
                         }}
                         style={{
-                            backgroundSize: "200% 100%"
+                            backgroundSize: "200% 100%",
                         }}
                     >
                         Conseil Étudiant HE2B
@@ -108,28 +108,53 @@ export default function CampusSectionSimple() {
                         initial={{ width: 0 }}
                         animate={inView ? { width: "100%" } : { width: 0 }}
                         transition={{ duration: 1, delay: 0.5 }}
-                        className="h-1 bg-gradient-to-r from-[#3F3290] to-[#8b5cf6] rounded-full mx-auto mb-6 max-w-xs"
+                        className="h-1 bg-gradient-to-r from-[#3F3290] to-[#8b5cf6] rounded-full mx-auto mb-3 md:mb-4 lg:mb-6 max-w-xs"
                     />
 
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={inView ? { opacity: 1 } : { opacity: 0 }}
                         transition={{ duration: 0.8, delay: 0.7 }}
-                        className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto"
+                        className="text-base md:text-lg lg:text-xl xl:text-2xl text-muted-foreground max-w-2xl mx-auto"
                     >
                         Votre voix au sein de l'institution
                     </motion.p>
                 </motion.div>
 
-                {/* Grid campus avec animations staggered */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={inView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
                     className="relative"
                 >
-                    {/* Grille principale */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-6 lg:gap-8 max-w-6xl mx-auto">
+                    {/* Mobile: HE2B Logo uniquement */}
+                    <div className="md:hidden flex justify-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                            animate={inView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.8 }}
+                            transition={{
+                                duration: 0.6,
+                                type: "spring",
+                                stiffness: 100,
+                            }}
+                        >
+                            <Link href="/campus" className="block">
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="relative"
+                                >
+                                    <div className="w-60 h-60 relative">
+                                        <img src="/logo.png" alt="HE2B" className="w-full h-full object-contain drop-shadow-lg" />
+                                    </div>
+                                </motion.div>
+                            </Link>
+                        </motion.div>
+                    </div>
+
+                    {/* Desktop: All campus logos */}
+                    <div className="hidden md:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-6 lg:gap-8 max-w-6xl mx-auto">
                         {campuses.map((campus, index) => (
                             <motion.div
                                 key={campus.id}
@@ -139,32 +164,29 @@ export default function CampusSectionSimple() {
                                     duration: 0.6,
                                     delay: index * 0.1,
                                     type: "spring",
-                                    stiffness: 100
+                                    stiffness: 100,
                                 }}
                                 whileHover={{ y: -10 }}
                                 className="flex flex-col items-center group"
                             >
-                                <Link
-                                    href={`/campus/${campus.slug}`}
-                                    className="block relative"
-                                >
+                                <Link href={`/campus/${campus.slug}`} className="block relative">
                                     {/* Glow effect */}
                                     <motion.div
                                         className="absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                         style={{
-                                            background: `radial-gradient(circle, ${isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(99, 102, 241, 0.3)'} 0%, transparent 70%)`
+                                            background: `radial-gradient(circle, ${isDark ? "rgba(139, 92, 246, 0.3)" : "rgba(99, 102, 241, 0.3)"} 0%, transparent 70%)`,
                                         }}
                                         animate={{
                                             scale: [1, 1.1, 1],
                                         }}
                                         transition={{
                                             duration: 2,
-                                            repeat: Infinity,
-                                            ease: "easeInOut"
+                                            repeat: Number.POSITIVE_INFINITY,
+                                            ease: "easeInOut",
                                         }}
                                     />
 
-                                    {/* Logo seul */}
+                                    {/* Logo */}
                                     <motion.div
                                         whileHover={{
                                             scale: 1.15,
@@ -191,46 +213,6 @@ export default function CampusSectionSimple() {
                             </motion.div>
                         ))}
                     </div>
-
-                    {/* Lignes de connexion animées */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
-                        {campuses.slice(0, -1).map((_, index) => (
-                            <motion.line
-                                key={index}
-                                x1={`${(index + 1) * (100 / campuses.length)}%`}
-                                y1="50%"
-                                x2={`${(index + 2) * (100 / campuses.length)}%`}
-                                y2="50%"
-                                stroke={isDark ? '#8b5cf6' : '#6366f1'}
-                                strokeWidth="1"
-                                opacity="0.2"
-                                initial={{ pathLength: 0 }}
-                                animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
-                                transition={{ duration: 1, delay: 1 + index * 0.2 }}
-                            />
-                        ))}
-                    </svg>
-                </motion.div>
-
-                {/* Call to action subtil */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                    transition={{ duration: 0.8, delay: 1.5 }}
-                    className="mt-16"
-                >
-                    <motion.p
-                        className="text-muted-foreground/80 text-sm md:text-base"
-                        animate={{
-                            opacity: [0.6, 1, 0.6],
-                        }}
-                        transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                    >
-                    </motion.p>
                 </motion.div>
             </div>
         </section>

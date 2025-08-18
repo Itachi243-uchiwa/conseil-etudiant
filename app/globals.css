@@ -600,3 +600,189 @@
 .perspective-container {
   perspective: 1000px;
 }
+
+/* Animations mobiles époustouflantes - À ajouter à la fin de votre CSS */
+
+/* Animation slide-in optimisée pour mobile */
+.animate-slide-in-bottom {
+    animation: slideInBottom 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pulse avec glow pour mobile */
+.animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 5px hsla(var(--primary) / 0.3);
+    }
+    50% {
+        opacity: 0.8;
+        box-shadow: 0 0 20px hsla(var(--primary) / 0.6);
+    }
+}
+
+/* Animation flottement doux pour mobile */
+.animate-float-gentle {
+    animation: floatGentle 4s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Animation bounce-in pour mobile */
+.animate-bounce-in {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animation shimmer pour mobile */
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent, hsla(var(--primary) / 0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Animation scale-in pour mobile */
+.animate-scale-in {
+    animation: scaleIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes scaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Délais d'animation échelonnés pour mobile */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+
+/* Cartes mobiles optimisées */
+.mobile-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-lg p-4;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-card:hover {
+    @apply bg-card border-primary/30;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Glass morphism pour mobile */
+.glass-mobile {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Feedback tactile pour mobile */
+.mobile-touch {
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-touch:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+}
+
+/* Révélation de texte avec flou pour mobile */
+.animate-text-reveal {
+    animation: textReveal 1s ease-out forwards;
+}
+
+@keyframes textReveal {
+    0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0);
+    }
+}
+
+/* Gradient animé pour mobile */
+.animate-gradient-shift {
+    background: linear-gradient(-45deg,
+    hsla(var(--primary) / 0.8),
+    hsla(var(--secondary) / 0.8),
+    hsla(var(--tertiary) / 0.8),
+    hsla(var(--primary) / 0.8)
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Rotation douce pour mobile */
+.animate-rotate-gentle {
+    animation: rotateGentle 10s linear infinite;
+}
+
+@keyframes rotateGentle {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

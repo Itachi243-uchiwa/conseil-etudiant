@@ -222,7 +222,7 @@ END:VCALENDAR`
 
             <div className="container py-12 md:py-20">
                 {/* Navigation de retour */}
-                <div className="mb-8">
+                <div className="pt-7 mb-8">
                     <LuxuryButton asChild variant="outline" className="mb-4">
                         <Link href="/events" className="flex items-center gap-2">
                             <ArrowLeft className="h-4 w-4" />

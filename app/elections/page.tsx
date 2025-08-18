@@ -16,7 +16,7 @@ export default function ElectionsPage() {
         <div className="relative">
             <ParallaxBackground />
 
-            <div className="container py-12 md:py-20">
+            <div className="container pt-14 py-12 md:py-20">
                 <div className="max-w-4xl mx-auto mb-16">
                     <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 text-center">
                         Les élections étudiantes

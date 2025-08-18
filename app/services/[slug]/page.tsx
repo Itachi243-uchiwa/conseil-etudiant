@@ -77,7 +77,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
 
             <div className="container py-12 md:py-20">
                 {/* Bouton retour */}
-                <div className="mb-8">
+                <div className="mb-8 pt-16">
                     <LuxuryButton asChild variant="outline" className="border-primary/30 hover:border-primary/60">
                         <Link href="/services" className="flex items-center gap-2">
                             <ArrowLeft className="h-4 w-4" />
@@ -89,9 +89,6 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
                 {/* En-tête du service */}
                 <div className="max-w-6xl mx-auto mb-16">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="p-4 rounded-full bg-primary/10 flex-shrink-0">
-                            <IconComponent className="h-8 w-8 text-primary" />
-                        </div>
                         <div className="min-w-0 flex-1">
                             <LuxuryHeading as="h1" className="text-3xl md:text-4xl lg:text-5xl mb-2">
                                 {service.title}
@@ -139,7 +136,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
                                     <Link href="/contact">Nous contacter</Link>
                                 </LuxuryButton>
                                 <LuxuryButton asChild variant="outline" className="border-primary/30 hover:border-primary/60">
-                                    <Link href="mailto:services@cehe2b.be">services@cehe2b.be</Link>
+                                    <Link href="mailto:info@cehe2b.be">info@cehe2b.be</Link>
                                 </LuxuryButton>
                             </div>
                         </div>
@@ -175,7 +172,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
                                     <Link href="/contact">Nous contacter</Link>
                                 </LuxuryButton>
                                 <LuxuryButton asChild variant="outline" className="border-primary/30 hover:border-primary/60">
-                                    <Link href="mailto:services@cehe2b.be">services@cehe2b.be</Link>
+                                    <Link href="mailto:info@cehe2b.be">info@cehe2b.be</Link>
                                 </LuxuryButton>
                             </div>
                         </div>
@@ -231,7 +228,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailProps) 
                             <Link href="/contact">Prendre rendez-vous</Link>
                         </LuxuryButton>
                         <LuxuryButton asChild variant="outline" className="border-primary/30 hover:border-primary/60">
-                            <Link href="mailto:services@cehe2b.be">services@cehe2b.be</Link>
+                            <Link href="mailto:info@cehe2b.be">info@cehe2b.be</Link>
                         </LuxuryButton>
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { BookOpen, Briefcase, Coins, FileText, GraduationCap, Scale} from "lucide-react"
+import { BookOpen, Briefcase, Coins, FileText, GraduationCap, Scale } from "lucide-react"
 import ParallaxBackground from "@/components/ui/parallax-background"
 import { getServices } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
@@ -11,10 +11,11 @@ import { StructuredData } from "@/components/StructuredData"
 
 export const metadata: Metadata = generateMetadata({
     title: "Services aux Étudiants - Accompagnement et Soutien",
-    description: "Découvrez tous les services gratuits du Conseil Étudiant HE2B : aide juridique, soutien financier, accompagnement pédagogique et bien plus pour réussir vos études.",
-    keywords: ['services étudiants', 'aide juridique', 'soutien financier', 'accompagnement', 'assistance', 'conseil'],
-    url: '/services'
-});
+    description:
+        "Découvrez tous les services gratuits du Conseil Étudiant HE2B : aide juridique, soutien financier, accompagnement pédagogique et bien plus pour réussir vos études.",
+    keywords: ["services étudiants", "aide juridique", "soutien financier", "accompagnement", "assistance", "conseil"],
+    url: "/services",
+})
 
 interface ServiceItem {
     id: number
@@ -30,12 +31,12 @@ interface ServiceItem {
 }
 
 const iconMap: Record<string, any> = {
-    'scale': Scale,
-    'coins': Coins,
-    'graduation-cap': GraduationCap,
-    'book-open': BookOpen,
-    'file-text': FileText,
-    'briefcase': Briefcase,
+    scale: Scale,
+    coins: Coins,
+    "graduation-cap": GraduationCap,
+    "book-open": BookOpen,
+    "file-text": FileText,
+    briefcase: Briefcase,
 }
 
 const getIcon = (iconName: string) => {
@@ -43,48 +44,80 @@ const getIcon = (iconName: string) => {
 }
 
 export default async function ServicesPage() {
-    const services: ServiceItem[] = await getServices() || []
+    const services: ServiceItem[] = (await getServices()) || []
 
-    const structuredData = generateStructuredData('organization', {});
+    const structuredData = generateStructuredData("organization", {})
 
     return (
         <>
-            <StructuredData data={structuredData}/>
+            <StructuredData data={structuredData} />
             <div className="relative">
-                <ParallaxBackground/>
+                <div className="hidden lg:block">
+                    <ParallaxBackground />
+                </div>
 
-                <div className="container py-12 md:py-20">
-                    <header className="max-w-4xl mx-auto mb-16">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6">Nos Services aux Étudiants</h1>
-                        <p className="text-xl text-muted-foreground">
-                            Le Conseil Étudiant HE2B propose une variété de services gratuits pour accompagner les
-                            étudiants tout au long de leur
-                            parcours académique. Découvrez nos services et n'hésitez pas à nous contacter pour plus
+                <div className="container pt-20 py-6 md:py-20 px-4 md:px-8">
+                    <header className="max-w-4xl mx-auto mb-8 md:mb-16">
+                        <h1 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6 animate-slide-in-bottom">
+                            Nos Services aux Étudiants
+                        </h1>
+                        <p className="text-base md:text-xl text-muted-foreground animate-slide-in-bottom animate-delay-200">
+                            Le Conseil Étudiant HE2B propose une variété de services gratuits pour accompagner les étudiants tout au
+                            long de leur parcours académique. Découvrez nos services et n'hésitez pas à nous contacter pour plus
                             d'informations.
                         </p>
                     </header>
 
                     <main>
                         {services.length === 0 ? (
-                            <section className="text-center py-12">
-                                <h2 className="text-2xl font-semibold mb-4">Services en préparation</h2>
-                                <p className="text-muted-foreground">Nos services seront bientôt disponibles. Revenez
-                                    prochainement !</p>
+                            <section className="text-center py-6 md:py-12">
+                                <h2 className="text-lg md:text-2xl font-semibold mb-4">Services en préparation</h2>
+                                <p className="text-muted-foreground text-sm md:text-base">
+                                    Nos services seront bientôt disponibles. Revenez prochainement !
+                                </p>
                             </section>
                         ) : (
                             <>
                                 <section aria-labelledby="services-list">
-                                    <h2 id="services-list" className="sr-only">Liste de nos services</h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                                    <h2 id="services-list" className="sr-only">
+                                        Liste de nos services
+                                    </h2>
+
+                                    <div className="lg:hidden space-y-4 mb-8">
+                                        {services.map((service, index) => {
+                                            const IconComponent = getIcon(service.icon)
+                                            return (
+                                                <article key={service.id} className={`animate-slide-in-bottom animate-delay-${index * 100}`}>
+                                                    <Link
+                                                        href={`/services/${service.slug}`}
+                                                        className="block mobile-card mobile-touch hover:scale-[1.02] transition-all duration-300"
+                                                        aria-label={`En savoir plus sur ${service.title}`}
+                                                    >
+                                                        <div className="flex items-start space-x-3">
+                                                            <div className="p-2 rounded-full bg-primary/10 flex-shrink-0" aria-hidden="true">
+                                                                <IconComponent className="h-5 w-5 text-primary" />
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <h3 className="font-semibold text-sm mb-1">{service.title}</h3>
+                                                                <p className="text-xs text-muted-foreground line-clamp-2">{service.description}</p>
+                                                                <div className="mt-2 text-xs text-primary font-medium">En savoir plus →</div>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </article>
+                                            )
+                                        })}
+                                    </div>
+
+                                    <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                                         {services.map((service) => {
                                             const IconComponent = getIcon(service.icon)
                                             return (
                                                 <article key={service.id}>
                                                     <Card className="tilt-on-hover card-shine h-full flex flex-col">
                                                         <CardHeader>
-                                                            <div className="mb-4 p-3 rounded-full bg-primary/10 w-fit"
-                                                                 aria-hidden="true">
-                                                                <IconComponent className="h-6 w-6 text-primary"/>
+                                                            <div className="mb-4 p-3 rounded-full bg-primary/10 w-fit" aria-hidden="true">
+                                                                <IconComponent className="h-6 w-6 text-primary" />
                                                             </div>
                                                             <CardTitle>
                                                                 <h3>{service.title}</h3>
@@ -96,8 +129,10 @@ export default async function ServicesPage() {
                                                         </CardContent>
                                                         <CardFooter>
                                                             <Button asChild>
-                                                                <Link href={`/services/${service.slug}`}
-                                                                      aria-label={`En savoir plus sur ${service.title}`}>
+                                                                <Link
+                                                                    href={`/services/${service.slug}`}
+                                                                    aria-label={`En savoir plus sur ${service.title}`}
+                                                                >
                                                                     En savoir plus
                                                                 </Link>
                                                             </Button>
@@ -117,19 +152,23 @@ export default async function ServicesPage() {
                             </>
                         )}
 
-                        <section className="grid md:grid-cols-2 gap-12 items-center bg-muted/30 rounded-lg p-8"
-                                 aria-labelledby="how-to-access">
+                        <section
+                            className="grid md:grid-cols-2 gap-12 items-center bg-muted/30 rounded-lg p-8"
+                            aria-labelledby="how-to-access"
+                        >
                             <div>
-                                <h2 id="how-to-access" className="text-2xl font-bold mb-4">Comment accéder à nos
-                                    services ?</h2>
+                                <h2 id="how-to-access" className="text-2xl font-bold mb-4">
+                                    Comment accéder à nos services ?
+                                </h2>
                                 <p className="mb-4">
-                                    Tous nos services sont gratuits et accessibles à tous les étudiants de la HE2B. Pour
-                                    bénéficier de nos
+                                    Tous nos services sont gratuits et accessibles à tous les étudiants de la HE2B. Pour bénéficier de nos
                                     services, vous pouvez :
                                 </p>
                                 <ul className="space-y-2 mb-6" role="list">
                                     <li className="flex items-start" role="listitem">
-                                        <span className="text-primary font-bold mr-2" aria-hidden="true">•</span>
+                    <span className="text-primary font-bold mr-2" aria-hidden="true">
+                      •
+                    </span>
                                         <span>
                       Nous contacter par email à{" "}
                                             <a
@@ -137,16 +176,20 @@ export default async function ServicesPage() {
                                                 className="text-primary hover:underline"
                                                 aria-label="Envoyer un email aux services du Conseil Étudiant"
                                             >
-                        services@cehe2b.be
+                        info@cehe2b.be
                       </a>
                     </span>
                                     </li>
                                     <li className="flex items-start" role="listitem">
-                                        <span className="text-primary font-bold mr-2" aria-hidden="true">•</span>
+                    <span className="text-primary font-bold mr-2" aria-hidden="true">
+                      •
+                    </span>
                                         <span>Venir nous rencontrer dans nos bureaux sur les différents campus de la HE2B</span>
                                     </li>
                                     <li className="flex items-start" role="listitem">
-                                        <span className="text-primary font-bold mr-2" aria-hidden="true">•</span>
+                    <span className="text-primary font-bold mr-2" aria-hidden="true">
+                      •
+                    </span>
                                         <span>Nous contacter via notre formulaire en ligne</span>
                                     </li>
                                 </ul>

@@ -68,9 +68,9 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="relative">
             <ParallaxBackground />
 
-            <div className="container py-12 md:py-20">
+            <div className="containerpy-12 md:py-20">
                 {/* Navigation */}
-                <div className="mb-8">
+                <div className="mb-8 pt-7">
                     <Button variant="ghost" asChild className="mb-4">
                         <Link href="/news">
                             <ArrowLeft className="mr-2 h-4 w-4" />
