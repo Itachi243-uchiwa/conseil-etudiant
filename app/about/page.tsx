@@ -125,7 +125,7 @@ export default async function AboutPage() {
                         </section>
 
                         {/* SECTION Mission / Histoire / Valeurs optimisée mobile */}
-                        <section className="mb-6 md:mb-16">
+                        <section className="mb-6 md:mb-16 rounded-xl p-6 md:p-10 bg-white shadow-md">
                             <Tabs defaultValue="mission" className="mb-6 md:mb-16">
                                 <TabsList className="grid w-full grid-cols-3 md:w-[400px] md:mx-0 h-8 md:h-10" role="tablist">
                                     <TabsTrigger value="mission" role="tab" className="text-xs md:text-sm px-2">
