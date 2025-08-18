@@ -6,6 +6,7 @@ import ParallaxBackground from "@/components/ui/parallax-background"
 import { getCampus } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 interface CampusDto {
     id: number
@@ -47,7 +48,9 @@ export default async function CampusPage() {
 
                 <div className="container pt-20 py-12 md:py-24 px-4 md:px-6">
                     <header className="max-w-4xl mx-auto mb-8 md:mb-12 animate-slide-in-bottom">
-                        <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6 text-center">Nos Campus HE2B</h1>
+                        <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 animate-fade-in-up">
+                            Nos Campus HE2B
+                        </LuxuryHeading>
                         <p className="text-base md:text-lg text-center mb-8 md:mb-12 max-w-3xl mx-auto text-muted-foreground">
                             La Haute École Bruxelles-Brabant (HE2B) est répartie sur plusieurs campus, chacun spécialisé dans
                             différents domaines d'études. Découvrez nos sites et leurs spécificités.

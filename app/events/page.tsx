@@ -9,6 +9,7 @@ import LuxuryCard from "@/components/ui/luxury-card"
 import { getEvents } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export const metadata: Metadata = generateMetadata({
     title: "Événements Étudiants - Calendrier et Activités HE2B",
@@ -88,9 +89,10 @@ export default async function EventsPage() {
 
                 <div className="container pt-20 py-6 md:py-20 px-4 md:px-8">
                     <header className="max-w-4xl mx-auto mb-8 md:mb-16">
-                        <h1 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6 animate-slide-in-bottom">
+                        <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 animate-fade-in-up">
                             Événements Étudiants HE2B
-                        </h1>
+                        </LuxuryHeading>
+
                         <p className="text-base md:text-xl text-muted-foreground animate-slide-in-bottom animate-delay-200">
                             Découvrez les événements organisés par le Conseil Étudiant HE2B tout au long de l'année académique. Des
                             soirées festives aux conférences enrichissantes, il y en a pour tous les goûts !

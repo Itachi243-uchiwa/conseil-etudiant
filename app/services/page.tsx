@@ -8,6 +8,7 @@ import ParallaxBackground from "@/components/ui/parallax-background"
 import { getServices } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export const metadata: Metadata = generateMetadata({
     title: "Services aux Étudiants - Accompagnement et Soutien",
@@ -58,9 +59,10 @@ export default async function ServicesPage() {
 
                 <div className="container pt-20 py-6 md:py-20 px-4 md:px-8">
                     <header className="max-w-4xl mx-auto mb-8 md:mb-16">
-                        <h1 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6 animate-slide-in-bottom">
+                        <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 animate-fade-in-up">
                             Nos Services aux Étudiants
-                        </h1>
+                        </LuxuryHeading>
+
                         <p className="text-base md:text-xl text-muted-foreground animate-slide-in-bottom animate-delay-200">
                             Le Conseil Étudiant HE2B propose une variété de services gratuits pour accompagner les étudiants tout au
                             long de leur parcours académique. Découvrez nos services et n'hésitez pas à nous contacter pour plus

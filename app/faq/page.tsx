@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import ParallaxBackground from "@/components/ui/parallax-background"
-import { LuxuryHeading } from "@/components/ui/luxury-heading" // Importation corrigée
+import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import LuxuryCard from "@/components/ui/luxury-card"
 
 export const metadata: Metadata = {

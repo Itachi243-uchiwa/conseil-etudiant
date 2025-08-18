@@ -38,10 +38,7 @@ export default function JoinPage() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                                 <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-                                    <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Par élections</h2>
-                                    <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">
-                                        Fais entendre ta voix et représente tes camarades en te présentant aux élections étudiantes.
-                                    </p>
+                                    <h2 className="text-xl md:text-2xl font-bold !text-white/75 mb-0">Par élections</h2>
                                 </div>
                             </div>
                             <CardContent className="flex-grow p-4 md:p-6 flex flex-col justify-between">
@@ -74,10 +71,7 @@ export default function JoinPage() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                                 <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-                                    <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Par cooptation</h2>
-                                    <p className="text-white/90 mb-2 md:mb-4 text-sm md:text-base">
-                                        Rejoins notre équipe en cours d'année pour renforcer nos rangs ou pour un projet spécifique.
-                                    </p>
+                                    <h2 className="text-xl md:text-2xl font-bold !text-white/75 mb-2">Par cooptation</h2>
                                 </div>
                             </div>
                             <CardContent className="flex-grow p-4 md:p-6 flex flex-col justify-between">

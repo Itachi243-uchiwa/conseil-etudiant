@@ -8,6 +8,7 @@ import ParallaxBackground from "@/components/ui/parallax-background"
 import { getNews } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export const metadata: Metadata = generateMetadata({
     title: "Actualités - Toutes les nouvelles du Conseil Étudiant",
@@ -49,9 +50,11 @@ export default async function NewsPage() {
 
                 <div className="container pt-20 py-3 md:py-20 px-4 md:px-8">
                     <header className="max-w-4xl mx-auto mb-4 md:mb-16">
-                        <h1 className="text-xl md:text-5xl font-bold mb-2 md:mb-6 animate-slide-in-bottom">
+
+                        <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 animate-fade-in-up">
                             Actualités du Conseil Étudiant
-                        </h1>
+                        </LuxuryHeading>
+
                         <p className="text-sm md:text-xl text-muted-foreground animate-slide-in-bottom animate-delay-200 leading-relaxed">
                             Restez informé des dernières nouvelles du Conseil Étudiant HE2B. Retrouvez ici toutes nos actualités,
                             annonces et informations importantes pour la communauté étudiante.
@@ -155,7 +158,7 @@ export default async function NewsPage() {
                                                     </CardContent>
                                                     <CardFooter>
                                                         <Button asChild className="hover:scale-105 transition-transform">
-                                                            <Link href={`/actualites/${item.slug}`} aria-label={`Lire l'article: ${item.title}`}>
+                                                            <Link href={`/news/${item.slug}`} aria-label={`Lire l'article: ${item.title}`}>
                                                                 Lire la suite
                                                             </Link>
                                                         </Button>

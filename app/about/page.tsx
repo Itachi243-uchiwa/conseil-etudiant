@@ -9,6 +9,7 @@ import { Shield, Mail, Phone, Users, Heart, Megaphone, GraduationCap, Handshake,
 import { getOfficeMembers, getMissions } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export const metadata: Metadata = generateMetadata({
     title: "À Propos - Histoire, Mission et Équipe du Conseil Étudiant",
@@ -59,7 +60,6 @@ const getIconComponent = (iconName: string) => {
 
 export default async function AboutPage() {
     const teamMembers: TeamMemberDto[] = await getOfficeMembers()
-    console.log(teamMembers)
     const missions: MissionDto[] = await getMissions()
     const missionImages = missions.slice(0, 3)
 
@@ -75,9 +75,10 @@ export default async function AboutPage() {
 
                 <div className="container pt-20 py-4 md:py-20 px-3 md:px-8">
                     <header className="max-w-4xl mx-auto mb-6 md:mb-16">
-                        <h1 className="text-xl md:text-5xl font-bold mb-3 md:mb-6 animate-fade-in-up">
+                        <LuxuryHeading as="h1" className="text-4xl md:text-5xl mb-6 animate-fade-in-up">
                             À propos du Conseil Étudiant HE2B
-                        </h1>
+                        </LuxuryHeading>
+
                         <p className="text-sm md:text-xl text-muted-foreground mb-4 md:mb-8 animate-fade-in-up animation-delay-200">
                             Le Conseil Étudiant HE2B est l'organe de représentation des étudiants au sein de la Haute École
                             Bruxelles-Brabant. Découvrez notre histoire, notre mission et notre équipe engagée pour vous.
@@ -86,12 +87,11 @@ export default async function AboutPage() {
 
                     <main>
                         <section aria-labelledby="our-missions" className="mb-6 md:mb-16">
-                            <h2
-                                id="our-missions"
-                                className="text-lg md:text-3xl font-bold mb-3 md:mb-8 text-center animate-fade-in-up"
-                            >
+
+                            <LuxuryHeading as="h2"  className="text-2xl font-bold text-center mb-6">
                                 Nos Missions
-                            </h2>
+                            </LuxuryHeading>
+
                             <p className="text-sm md:text-xl text-center mb-4 md:mb-12 max-w-3xl mx-auto animate-fade-in-up animation-delay-300">
                                 Défendre · Soutenir · Informer
                             </p>
@@ -255,12 +255,9 @@ export default async function AboutPage() {
 
                         {/* --- RESTE DU CODE (équipe + rejoindre) inchangé --- */}
                         <section id="notre-equipe" aria-labelledby="team-section" className="mb-6 md:mb-16">
-                            <h2
-                                id="team-section"
-                                className="text-lg md:text-3xl font-bold mb-4 md:mb-8 text-center animate-fade-in-up"
-                            >
-                                Notre Équipe
-                            </h2>
+                            <LuxuryHeading as="h2"  className="text-2xl text-center font-bold mb-6">
+                                Notre Equipe
+                            </LuxuryHeading>
 
                             <div className="md:hidden space-y-3 mb-6">
                                 {teamMembers.map((member, index) => (

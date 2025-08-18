@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from "lucide-react"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export default function ContactPageClient() {
     const [formData, setFormData] = useState({
@@ -64,9 +65,9 @@ export default function ContactPageClient() {
         <div className="container pt-16 py-8 md:py-12 lg:py-24 px-4 md:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
                 <div className="animate-slide-in-bottom">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-[#3F3290] dark:gold-text">
+                    <LuxuryHeading as="h1" className="text-3xl font-bold mb-6">
                         Contactez-nous
-                    </h1>
+                    </LuxuryHeading>
                     <p className="text-sm md:text-base lg:text-lg mb-6 md:mb-8 text-muted-foreground">
                         Nous sommes là pour vous aider. N'hésitez pas à nous contacter pour toute question ou demande.
                     </p>

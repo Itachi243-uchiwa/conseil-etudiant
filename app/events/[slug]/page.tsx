@@ -1,6 +1,5 @@
 'use client'
 
-import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
@@ -19,7 +18,7 @@ import {
 import ParallaxBackground from "@/components/ui/parallax-background"
 import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import LuxuryCard from "@/components/ui/luxury-card"
-import { getEventBySlug, getEvents } from "@/lib/api"
+import { getEventBySlug } from "@/lib/api"
 import { useEffect, useState } from "react"
 
 // Types pour les événements

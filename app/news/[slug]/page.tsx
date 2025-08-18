@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { CalendarDays, FileText, ExternalLink, ArrowLeft, Download } from "lucide-react"
 import ParallaxBackground from "@/components/ui/parallax-background"
 import { getNewsBySlug } from "@/lib/api"
+import {LuxuryButton} from "@/components/ui/luxury-button";
 
 interface PageProps {
     params: Promise<{ slug: string }>
@@ -68,15 +69,16 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="relative">
             <ParallaxBackground />
 
-            <div className="containerpy-12 md:py-20">
+            <div className="container py-12 md:py-20">
                 {/* Navigation */}
                 <div className="mb-8 pt-7">
-                    <Button variant="ghost" asChild className="mb-4">
-                        <Link href="/news">
-                            <ArrowLeft className="mr-2 h-4 w-4" />
+                    <LuxuryButton asChild variant="outline" className="mb-4">
+                        <Link href="/news" className="flex items-center gap-2">
+                            <ArrowLeft className="h-4 w-4" />
                             Retour aux actualités
                         </Link>
-                    </Button>
+                    </LuxuryButton>
+
                 </div>
 
                 {/* Article Header */}

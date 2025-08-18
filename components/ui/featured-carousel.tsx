@@ -107,12 +107,9 @@ export default function FeaturedCarousel({ items, interval = 6000, className }: 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/30 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white drop-shadow-lg">
+                  <h2 className="text-2xl md:text-4xl font-bold mb-4 !text-white drop-shadow-lg">
                     {items[0].title}
                   </h2>
-                  <p className="text-lg text-white drop-shadow-md max-w-2xl mb-6">
-                    {items[0].description}
-                  </p>
                   <LuxuryButton asChild variant="gold">
                     <Link href={items[0].link}>{items[0].linkText}</Link>
                   </LuxuryButton>
