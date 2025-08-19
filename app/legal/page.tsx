@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 export default function LegalPage() {
   return (
     <div className="container py-24 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-[#3F3290] dark:gold-text">Mentions légales</h1>
+      <h1 className="text-3xl font-bold mb-8 gold-text">Mentions légales</h1>
 
       <div className="space-y-8">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Éditeur du site</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Éditeur du site</h2>
           <p className="mb-2">
             <strong>Conseil Étudiant HE2B</strong>
           </p>
@@ -26,12 +26,12 @@ export default function LegalPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Directeur de la publication</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Directeur de la publication</h2>
           <p className="mb-2">Le Président du Conseil Étudiant HE2B</p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Hébergement</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Hébergement</h2>
           <p className="mb-2">
             <strong>Vercel Inc.</strong>
           </p>
@@ -41,7 +41,7 @@ export default function LegalPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Propriété intellectuelle</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Propriété intellectuelle</h2>
           <p className="mb-4">
             L'ensemble du contenu de ce site (textes, images, vidéos, etc.) est la propriété exclusive du Conseil
             Étudiant HE2B ou de ses partenaires. Toute reproduction, représentation, modification, publication,
@@ -56,7 +56,7 @@ export default function LegalPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Limitation de responsabilité</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Limitation de responsabilité</h2>
           <p className="mb-4">
             Le Conseil Étudiant HE2B s'efforce d'assurer au mieux de ses possibilités l'exactitude et la mise à jour des
             informations diffusées sur ce site, dont il se réserve le droit de corriger, à tout moment et sans préavis,
@@ -70,7 +70,7 @@ export default function LegalPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Liens hypertextes</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Liens hypertextes</h2>
           <p className="mb-4">
             Ce site peut contenir des liens vers d'autres sites internet ou d'autres ressources disponibles sur
             Internet. Le Conseil Étudiant HE2B ne dispose d'aucun moyen pour contrôler les sites en connexion avec son
@@ -83,7 +83,7 @@ export default function LegalPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">
+          <h2 className="text-2xl font-semibold mb-4 gold-text">
             Droit applicable et juridiction compétente
           </h2>
           <p className="mb-4">

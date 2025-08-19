@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 export const metadata: Metadata = {
   title: "Politique de cookies | Conseil Étudiant HE2B",
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
 export default function CookiesPage() {
   return (
     <div className="container py-24 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-[#3F3290] dark:gold-text">Politique de cookies</h1>
+      <LuxuryHeading className="text-3xl font-bold mb-8 ">Politique de cookies</LuxuryHeading>
 
       <div className="space-y-8">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Qu'est-ce qu'un cookie ?</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Qu'est-ce qu'un cookie ?</h2>
           <p className="mb-4">
             Un cookie est un petit fichier texte qui peut être conservé sur votre ordinateur, tablette ou smartphone
             lorsque vous visitez un site web. Les cookies permettent au site web de mémoriser vos actions et préférences
@@ -23,7 +24,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">
+          <h2 className="text-2xl font-semibold mb-4 gold-text">
             Comment utilisons-nous les cookies ?
           </h2>
           <p className="mb-4">
@@ -57,7 +58,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Comment gérer les cookies ?</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Comment gérer les cookies ?</h2>
           <p className="mb-4">
             Vous pouvez contrôler et/ou supprimer des cookies comme vous le souhaitez. Vous pouvez supprimer tous les
             cookies déjà présents sur votre ordinateur et vous pouvez configurer la plupart des navigateurs pour qu'ils
@@ -68,7 +69,7 @@ export default function CookiesPage() {
           <p>
             Pour plus d'informations sur la gestion des cookies, veuillez consulter les paramètres de votre navigateur
             ou visiter{" "}
-            <a href="https://www.allaboutcookies.org/" className="text-[#3F3290] underline">
+            <a href="https://www.allaboutcookies.org/" className="gold-text underline">
               www.allaboutcookies.org
             </a>
             .
@@ -76,7 +77,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">
+          <h2 className="text-2xl font-semibold mb-4 gold-text">
             Modifications de notre politique de cookies
           </h2>
           <p className="mb-4">
@@ -87,11 +88,11 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#3F3290] dark:gold-text">Nous contacter</h2>
+          <h2 className="text-2xl font-semibold mb-4 gold-text">Nous contacter</h2>
           <p className="mb-4">
             Si vous avez des questions concernant cette politique de cookies, veuillez nous contacter à l'adresse
             suivante :{" "}
-            <a href="mailto:contact@cehe2b.be" className="text-[#3F3290] underline">
+            <a href="mailto:info@cehe2b.be" className="gold-text underline">
               contact@cehe2b.be
             </a>
             .

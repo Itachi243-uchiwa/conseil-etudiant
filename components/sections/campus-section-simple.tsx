@@ -6,6 +6,7 @@ import Link from "next/link"
 import CampusLogo from "@/components/ui/campus-logo"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
+import LuxuryHeading from "../ui/luxury-heading"
 
 export default function CampusSectionSimple() {
     const [ref, inView] = useInView({
@@ -87,28 +88,19 @@ export default function CampusSectionSimple() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="mb-8 md:mb-10 lg:mb-16 hidden md:block"
                 >
-                    <motion.h2
+                    <LuxuryHeading
+                        as="h2"
                         className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-[#3F3290] via-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent"
-                        animate={{
-                            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                        }}
-                        transition={{
-                            duration: 5,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "linear",
-                        }}
-                        style={{
-                            backgroundSize: "200% 100%",
-                        }}
+
                     >
                         Conseil Étudiant HE2B
-                    </motion.h2>
+                    </LuxuryHeading>
 
                     <motion.div
                         initial={{ width: 0 }}
                         animate={inView ? { width: "100%" } : { width: 0 }}
                         transition={{ duration: 1, delay: 0.5 }}
-                        className="h-1 bg-gradient-to-r from-[#3F3290] to-[#8b5cf6] rounded-full mx-auto mb-3 md:mb-4 lg:mb-6 max-w-xs"
+                        className="h-1 bg-gradient-to-r from-[#3F3290] to-[#8b5cf6] dark:from-[#bf953f] dark:to-[#fcf6ba] rounded-full mx-auto mb-3 md:mb-4 lg:mb-6 max-w-xs"
                     />
 
                     <motion.p

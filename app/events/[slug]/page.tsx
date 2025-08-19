@@ -289,7 +289,7 @@ END:VCALENDAR`
                                 {/* Actions */}
                                 <div className="flex flex-wrap gap-4 pt-6 border-t">
                                     {event.externalLink && (
-                                        <LuxuryButton asChild variant="gold" className="flex items-center gap-2">
+                                        <LuxuryButton asChild className="mobile-touch">
                                             <a href={event.externalLink} target="_blank" rel="noopener noreferrer">
                                                 <ExternalLink className="h-4 w-4" />
                                                 {isPast ? 'Voir les détails' : 'S\'inscrire / Plus d\'infos'}

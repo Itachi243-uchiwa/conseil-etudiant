@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import {ChevronLeft, ChevronRight, ExternalLink} from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { LuxuryButton } from "./luxury-button"
@@ -110,7 +110,7 @@ export default function FeaturedCarousel({ items, interval = 6000, className }: 
                                 <h1 className="text-2xl md:text-3xl font-bold mb-4 !text-white drop-shadow-lg">
                                     {items[0].title}
                                 </h1>
-                                <LuxuryButton asChild variant="gold">
+                                <LuxuryButton asChild className="mobile-touch">
                                     <Link href={items[0].link}>{items[0].linkText}</Link>
                                 </LuxuryButton>
                             </div>

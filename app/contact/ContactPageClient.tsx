@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from "lucide-react"
 import LuxuryHeading from "@/components/ui/luxury-heading";
+import {LuxuryButton} from "@/components/ui/luxury-button";
 
 export default function ContactPageClient() {
     const [formData, setFormData] = useState({
@@ -74,7 +75,7 @@ export default function ContactPageClient() {
 
                     <div className="space-y-4 md:space-y-6 mb-8 md:mb-12">
                         <div className="flex items-start gap-3 md:gap-4 animate-slide-in-bottom animate-delay-100">
-                            <Mail className="h-5 w-5 md:h-6 md:w-6 text-[#3F3290] mt-1 flex-shrink-0" />
+                            <Mail className="h-5 w-5 md:h-6 md:w-6 gold-text mt-1 flex-shrink-0" />
                             <div>
                                 <h3 className="font-semibold text-sm md:text-base lg:text-lg">Email</h3>
                                 <p className="text-xs md:text-sm text-muted-foreground">bureau-@cehe2b.be</p>
@@ -83,14 +84,14 @@ export default function ContactPageClient() {
                             </div>
                         </div>
                         <div className="flex items-start gap-3 md:gap-4 animate-slide-in-bottom animate-delay-200">
-                            <Phone className="h-5 w-5 md:h-6 md:w-6 text-[#3F3290] mt-1 flex-shrink-0" />
+                            <Phone className="h-5 w-5 md:h-6 md:w-6 gold-text mt-1 flex-shrink-0" />
                             <div>
                                 <h3 className="font-semibold text-sm md:text-base lg:text-lg">Téléphone</h3>
                                 <p className="text-xs md:text-sm text-muted-foreground">+32 495 79 99 75</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3 md:gap-4 animate-slide-in-bottom animate-delay-300">
-                            <MapPin className="h-5 w-5 md:h-6 md:w-6 text-[#3F3290] mt-1 flex-shrink-0" />
+                            <MapPin className="h-5 w-5 md:h-6 md:w-6 gold-text mt-1 flex-shrink-0" />
                             <div>
                                 <h3 className="font-semibold text-sm md:text-base lg:text-lg">Adresse</h3>
                                 <p className="text-xs md:text-sm text-muted-foreground">
@@ -106,7 +107,7 @@ export default function ContactPageClient() {
                 <div className="animate-slide-in-bottom animate-delay-500">
                     <Card className="border-[#3F3290]/20 mobile-card">
                         <CardContent className="p-4 md:p-6">
-                            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-[#3F3290] dark:gold-text">
+                            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 gold-text">
                                 Envoyez-nous un message
                             </h2>
 
@@ -193,7 +194,7 @@ export default function ContactPageClient() {
                                         className="border-[#3F3290]/20 focus:border-[#3F3290] focus:ring-[#3F3290] mobile-touch text-sm md:text-base"
                                     />
                                 </div>
-                                <Button
+                                <LuxuryButton
                                     type="submit"
                                     disabled={isSubmitting}
                                     className="w-full bg-[#3F3290] hover:bg-[#342770] text-white disabled:opacity-50 mobile-touch text-sm md:text-base py-2 md:py-3"
@@ -208,7 +209,7 @@ export default function ContactPageClient() {
                                             <Send className="h-3 w-3 md:h-4 md:w-4 mr-2" /> Envoyer
                                         </>
                                     )}
-                                </Button>
+                                </LuxuryButton>
                             </form>
                         </CardContent>
                     </Card>

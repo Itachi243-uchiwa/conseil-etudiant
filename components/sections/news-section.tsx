@@ -9,6 +9,7 @@ import Link from "next/link"
 import { CalendarDays } from "lucide-react"
 import Image from "next/image"
 import { getNews, getMediaUrl } from "@/lib/api"
+import LuxuryHeading from "@/components/ui/luxury-heading";
 
 // Interface pour les actualités
 interface NewsItem {
@@ -141,7 +142,9 @@ export default function NewsSection() {
             <section className="py-12 md:py-20">
                 <div className="container px-4 md:px-6">
                     <div className="text-center mb-10 md:mb-16">
-                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">Actualités</h2>
+                        <LuxuryHeading as="h2" className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+                            Actualités
+                        </LuxuryHeading>
                         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 md:px-0">
                             Aucune actualité disponible pour le moment.
                         </p>
@@ -160,7 +163,10 @@ export default function NewsSection() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-10 md:mb-16"
                 >
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">Actualités</h2>
+                    <LuxuryHeading as="h2" className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+                        Actualités
+                    </LuxuryHeading>
+
                     <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 md:px-0">
                         Restez informé des dernières nouvelles du Conseil Étudiant HE2B.
                     </p>

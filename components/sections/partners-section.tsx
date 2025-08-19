@@ -4,7 +4,8 @@ import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { getHomepage } from "@/lib/api" // Ajustez le chemin selon votre structure
+import { getHomepage } from "@/lib/api"
+import LuxuryHeading from "@/components/ui/luxury-heading"; // Ajustez le chemin selon votre structure
 
 interface Partner {
     id: number
@@ -72,9 +73,9 @@ export default function PartnersSection() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-10 md:mb-16"
                 >
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+                    <LuxuryHeading as="h2" className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
                         {homepageData?.partnersTitle || "Nos partenaires"}
-                    </h2>
+                    </LuxuryHeading>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 md:px-0">
                         {homepageData?.partnersDescription || "Ils nous font confiance et nous soutiennent dans nos projets."}
                     </p>

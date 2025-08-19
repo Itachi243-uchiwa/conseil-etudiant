@@ -104,9 +104,10 @@ export default function AboutSection() {
                             Notre équipe est composée d'étudiants élus démocratiquement, représentant toutes les sections et tous les
                             campus de la HE2B.
                         </p>
-                        <LuxuryButton asChild variant="gold" className="text-sm md:text-base px-4 md:px-6">
+                        <LuxuryButton asChild className="mobile-touch">
                             <Link href="/about">En savoir plus sur notre équipe</Link>
                         </LuxuryButton>
+
                     </motion.div>
                 </div>
             </div>

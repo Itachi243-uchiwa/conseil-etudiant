@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import LogoDore from "@/components/ui/logo-dore"
 import ThemeToggle from "@/components/theme-toggle"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {LuxuryButton} from "@/components/ui/luxury-button";
 
 // Regroupement des éléments de navigation
 const navItems = [
@@ -60,7 +61,7 @@ export default function Header() {
             if (item.items) {
               return (
                 <DropdownMenu key={item.name}>
-                  <DropdownMenuTrigger className="flex items-center gap-1 text-foreground/80 hover:text-[#3F3290] transition-colors font-medium">
+                  <DropdownMenuTrigger className="flex items-center gap-1 text-foreground/80 dark:hover:text-[#ff9900] hover:text-[#4b3db0] transition-colors font-medium">
                     {item.name}
                     <ChevronDown className="h-4 w-4" />
                   </DropdownMenuTrigger>
@@ -70,7 +71,7 @@ export default function Header() {
                         <Link
                           href={subItem.href}
                           prefetch={true}
-                          className={cn("w-full", pathname === subItem.href && "text-[#3F3290] font-semibold")}
+                          className={cn("w-full", pathname === subItem.href && "gold-text font-semibold")}
                         >
                           {subItem.name}
                         </Link>
@@ -88,8 +89,8 @@ export default function Header() {
                 href={item.href}
                 prefetch={true}
                 className={cn(
-                  "text-foreground/80 hover:text-[#3F3290] transition-colors font-medium",
-                  pathname === item.href && "text-[#3F3290] font-semibold",
+                  "text-foreground/80 hover:text-[#4b3db0] dark:hover:text-[#ff9900] transition-colors font-medium",
+                  pathname === item.href && "gold-text font-semibold",
                 )}
               >
                 {item.name}
@@ -100,11 +101,11 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Button asChild className="hidden md:flex bg-[#3F3290] hover:bg-[#4b3db0] text-white border-none">
+          <LuxuryButton asChild className="hidden md:flex bg-[#3F3290] hover:bg-[#4b3db0] text-white border-none">
             <Link href="/join" prefetch={true}>
               Rejoindre
             </Link>
-          </Button>
+          </LuxuryButton>
 
           {/* Mobile Navigation */}
           <Sheet>
@@ -129,8 +130,8 @@ export default function Header() {
                               href={subItem.href}
                               prefetch={true}
                               className={cn(
-                                "block text-foreground/80 hover:text-[#3F3290] transition-colors text-base",
-                                pathname === subItem.href && "text-[#3F3290] font-semibold",
+                                "block text-foreground/80 hover:text-[#3F3290] dark:hover:text-[#ff9900] transition-colors text-base",
+                                pathname === subItem.href && "gold-text font-semibold",
                               )}
                             >
                               {subItem.name}
