@@ -168,7 +168,7 @@ export default function Hero3DSlider({ items, interval = 5000, className, autoPl
                   <h1
                       className={cn(
                           "text-4xl md:text-6xl lg:text-7xl font-bold mb-6",
-                          isLight ? "text-white drop-shadow-lg" : "purple-gradient-light",
+                          isLight ? "!text-white drop-shadow-lg" : "purple-gradient-light",
                       )}
                   >
                     {items[currentIndex].title}
