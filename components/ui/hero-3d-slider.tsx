@@ -173,9 +173,7 @@ export default function Hero3DSlider({ items, interval = 5000, className, autoPl
                   >
                     {items[currentIndex].title}
                   </h1>
-                  <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">
-                    {items[currentIndex].description}
-                  </p>
+
                 </div>
               </div>
             </motion.div>
