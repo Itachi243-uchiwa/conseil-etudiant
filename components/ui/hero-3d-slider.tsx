@@ -118,8 +118,7 @@ export default function Hero3DSlider({ items, interval = 5000, className, autoPl
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-background/20 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 purple-gradient-light">{items[0].title}</h1>
-                  <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-3xl">{items[0].description}</p>
+                  <h1 className="text-3xl md:text-6xl lg:text-6xl font-bold !text-white mb-6 purple-gradient-light">{items[0].title}</h1>
                 </div>
               </div>
             </div>
