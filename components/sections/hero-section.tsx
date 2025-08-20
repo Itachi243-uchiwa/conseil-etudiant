@@ -32,7 +32,6 @@ export default function HeroSection() {
     const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 })
     const [homepageData, setHomepageData] = useState<HomepageData | null>(null)
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
         setIsLoaded(true)
@@ -57,12 +56,9 @@ export default function HeroSection() {
                 const data = await getHomepage()
                 if (data) {
                     setHomepageData(data)
-                } else {
-                    setError("Impossible de charger les données")
                 }
             } catch (err) {
-                console.error("Erreur lors du chargement des données hero:", err)
-                setError("Erreur lors du chargement des données")
+                console.error("Erreur lors du chargement:", err)
             } finally {
                 setLoading(false)
             }
@@ -71,7 +67,6 @@ export default function HeroSection() {
         fetchData()
     }, [])
 
-    // Filtrer et trier les hero items actifs
     const activeHeroItems =
         homepageData?.heroItems
             ?.filter((item) => item.active)
@@ -82,101 +77,117 @@ export default function HeroSection() {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.2,
+                staggerChildren: 0.3,
+                delayChildren: 0.2,
             },
         },
     }
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 40, scale: 0.95 },
         visible: {
             opacity: 1,
             y: 0,
-            transition: {
-                duration: 0.8,
-                ease: "easeOut",
-            },
-        },
-    }
-
-    const shapeVariants = {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-            opacity: 1,
             scale: 1,
             transition: {
                 duration: 1,
-                ease: "easeOut",
+                ease: [0.16, 1, 0.3, 1],
             },
         },
     }
 
-    const renderParticles = () => {
-        if (windowDimensions.width === 0) return null
-
-        return Array.from({ length: 30 }).map((_, index) => (
-            <motion.div
-                key={index}
-                className="absolute rounded-full w-screen"
-                initial={{
-                    x: Math.random() * windowDimensions.width,
-                    y: Math.random() * windowDimensions.height,
-                    opacity: Math.random() * 0.5 + 0.1,
-                    scale: Math.random() * 0.5 + 0.5,
-                }}
-                animate={{
-                    x: [null, Math.random() * windowDimensions.width],
-                    y: [null, Math.random() * windowDimensions.height],
-                    opacity: [null, Math.random() * 0.5 + 0.1],
-                }}
-                transition={{
-                    duration: Math.random() * 10 + 10,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                }}
-                style={{
-                    width: Math.random() * 4 + 2 + "px",
-                    height: Math.random() * 4 + 2 + "px",
-                    background: `hsl(36, 100%, ${50 + Math.random() * 30}%)`,
-                    boxShadow: `0 0 ${Math.random() * 10 + 5}px hsl(36, 100%, 50%)`,
-                    zIndex: 1,
-                }}
-            />
-        ))
+    const floatingVariants = {
+        initial: { y: 0 },
+        animate: {
+            y: [-10, 10, -10],
+            transition: {
+                duration: 6,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+            },
+        },
     }
 
-    // Affichage conditionnel pendant le chargement ou en cas d'erreur
+    const renderFloatingElements = () => {
+        if (windowDimensions.width === 0) return null
+
+        return Array.from({ length: 20 }).map((_, index) => {
+            const startY = Math.random() * windowDimensions.height
+            return (
+                <motion.div
+                    key={index}
+                    className="absolute pointer-events-none bg-gradient-to-t from-primary/40 to-primary/80 rounded-full blur-[1px] shadow-lg"
+                    initial={{
+                        x: Math.random() * windowDimensions.width,
+                        y: startY,
+                        opacity: 0,
+                    }}
+                    animate={{
+                        y: [startY, startY - 100, startY],
+                        opacity: [0, 0.6, 0],
+                    }}
+                    transition={{
+                        duration: Math.random() * 8 + 8,
+                        repeat: Number.POSITIVE_INFINITY,
+                        delay: Math.random() * 5,
+                        ease: "linear",
+                    }}
+                    style={{
+                        width: Math.random() * 3 + 1 + "px",
+                        height: Math.random() * 3 + 1 + "px",
+                    }}
+                />
+            )
+        })
+    }
+
     if (loading) {
         return (
-            <section className="relative min-h-[70vh] md:min-h-screen max-w-screen flex items-center justify-center overflow-hidden pt-16 md:pt-20">
-                <div className="flex flex-col items-center justify-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-b-2 border-primary"></div>
-                    <p className="text-muted-foreground text-sm md:text-base">Chargement...</p>
-                </div>
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-primary/5">
+                <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="flex flex-col items-center gap-6"
+                >
+                    <div className="relative">
+                        <div className="animate-spin rounded-full h-16 w-16 border-2 border-transparent bg-gradient-to-r from-primary via-secondary to-primary bg-clip-border"></div>
+                        <div className="absolute inset-2 rounded-full bg-background"></div>
+                    </div>
+                </motion.div>
             </section>
         )
     }
 
-    if (error || activeHeroItems.length === 0) {
+    if (activeHeroItems.length === 0) {
         return (
-            <section className="relative min-h-[70vh] md:min-h-screen max-w-screen flex items-center justify-center overflow-hidden pt-16 md:pt-20">
-                <div className="container relative z-10 text-center px-4">
-                    <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6">Conseil Étudiant HE2B</h1>
-                    <p className="text-lg md:text-xl text-muted-foreground mb-6 md:mb-8">{error || "Aucun contenu disponible pour le moment"}</p>
-                    <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-                        <LuxuryButton asChild size="default" className="text-base md:text-lg px-6 md:px-8">
-                            <Link href="/about">En savoir plus</Link>
-                        </LuxuryButton>
-                        <LuxuryButton
-                            asChild
-                            size="default"
-                            variant="outline"
-                            className="text-base md:text-lg px-6 md:px-8 border-primary/30 hover:border-primary/60"
-                        >
-                            <Link href="/contact">Nous contacter</Link>
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-primary/5">
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="text-center relative z-10"
+                >
+                    <motion.h1
+                        variants={floatingVariants}
+                        initial="initial"
+                        animate="animate"
+                        className="text-4xl md:text-6xl lg:text-8xl font-light bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent mb-8"
+                    >
+                        HE2B
+                    </motion.h1>
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ delay: 0.5, duration: 1 }}
+                        className="h-px bg-gradient-to-r from-transparent via-primary to-transparent mb-12"
+                    />
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <LuxuryButton asChild size="lg" className="group relative overflow-hidden">
+                            <Link href="/about">
+                                <span className="relative z-10">Découvrir</span>
+                            </Link>
                         </LuxuryButton>
                     </div>
-                </div>
+                </motion.div>
             </section>
         )
     }
@@ -184,77 +195,96 @@ export default function HeroSection() {
     return (
         <section
             ref={ref}
-            className="relative min-h-[70vh] md:min-h-screen max-w-screen flex items-center justify-center overflow-hidden pt-16 md:pt-20"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-primary/5"
         >
-            {/* Background shapes - hidden on mobile */}
-            <div className="absolute inset-0 -z-10 overflow-hidden w-full hidden md:block">
+            {/* Arrière-plan moderne */}
+            <div className="absolute inset-0 w-full h-full">
                 <motion.div
-                    initial="hidden"
-                    animate={isLoaded ? "visible" : "hidden"}
-                    variants={shapeVariants}
-                    className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/10 blur-3xl"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={isLoaded ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                    className="absolute top-1/4 -left-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-primary to-secondary blur-3xl"
                 />
                 <motion.div
-                    initial="hidden"
-                    animate={isLoaded ? "visible" : "hidden"}
-                    variants={shapeVariants}
-                    className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full bg-secondary/10 blur-3xl"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={isLoaded ? { scale: 1, opacity: 0.08 } : { scale: 0, opacity: 0 }}
+                    transition={{ duration: 2, delay: 0.3, ease: "easeOut" }}
+                    className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-l from-secondary to-primary blur-3xl"
                 />
                 <motion.div
-                    initial="hidden"
-                    animate={isLoaded ? "visible" : "hidden"}
-                    variants={shapeVariants}
-                    className="absolute top-2/3 left-1/3 w-72 h-72 rounded-full bg-tertiary/10 blur-3xl"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={isLoaded ? { scale: 1, opacity: 0.05 } : { scale: 0, opacity: 0 }}
+                    transition={{ duration: 2, delay: 0.6, ease: "easeOut" }}
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-primary/30 to-secondary/30 blur-3xl"
                 />
             </div>
 
-            {/* Animated particles - hidden on mobile */}
-            <div className="hidden md:block">{isLoaded && renderParticles()}</div>
+            {/* Éléments flottants */}
+            <div className="absolute inset-0 hidden lg:block">
+                {isLoaded && renderFloatingElements()}
+            </div>
 
-            <div className="container relative z-10 h-full w-screen px-4 md:px-6">
+            <div className="container relative z-10 h-full px-4 md:px-6">
                 <motion.div
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
                     variants={containerVariants}
                     className="w-full h-full flex flex-col justify-center items-center"
                 >
-                    <div className="relative w-full h-[400px] md:h-[500px] lg:h-[800px] flex items-center justify-center">
-                        {/* Slider */}
-                        <motion.div variants={itemVariants} className="absolute inset-0 w-full h-full">
+                    <motion.div
+                        variants={itemVariants}
+                        className="relative w-full max-w-7xl"
+                    >
+                        <div className="relative h-[400px] md:h-[600px] lg:h-[800px] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-primary/10">
                             <Hero3DSlider
                                 items={activeHeroItems}
-                                interval={5000}
-                                className="w-full h-full rounded-lg shadow-lg md:rounded-none md:shadow-2xl"
+                                interval={6000}
+                                className="w-full h-full"
                             />
-                        </motion.div>
 
+                            {/* Overlay gradient moderne */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                        </div>
+
+                        {/* Boutons d'action épurés */}
                         <motion.div
                             variants={itemVariants}
-                            className="absolute z-20 bottom-4 md:bottom-8 lg:bottom-20 flex flex-col gap-3 md:gap-4 px-4 w-full max-w-sm md:max-w-none md:flex-row md:px-0 md:w-auto"
+                            className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 flex gap-4"
                         >
-                            <LuxuryButton asChild size="default" className="text-sm md:text-base lg:text-lg px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
-                                <Link href="/about">En savoir plus</Link>
+                            <LuxuryButton
+                                asChild
+                                size="lg"
+                                className="backdrop-blur-md bg-white/90 text-black hover:bg-white border-0 shadow-xl"
+                            >
+                                <Link href="/about">Découvrir</Link>
                             </LuxuryButton>
                             <LuxuryButton
                                 asChild
-                                size="default"
+                                size="lg"
                                 variant="outline"
-                                className="text-sm md:text-base lg:text-lg px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 border-primary/30 hover:border-primary/60"
+                                className="backdrop-blur-md bg-black/20 border-white/30 text-white hover:bg-white/10 shadow-xl"
                             >
-                                <Link href="/contact">Nous contacter</Link>
+                                <Link href="/contact">Contact</Link>
                             </LuxuryButton>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </motion.div>
             </div>
 
+            {/* Indicateur de défilement moderne */}
             <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 1, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
-                className="absolute bottom-1 md:bottom-2 left-1/2 transform -translate-x-1/2 z-20"
+                transition={{ delay: 2, duration: 1 }}
+                className="absolute bottom-6 left-1/2 transform -translate-x-1/2"
             >
-                <ChevronDown className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 text-primary" />
+                <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                    className="p-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/20"
+                >
+                    <ChevronDown className="h-5 w-5 text-primary/80" />
+                </motion.div>
             </motion.div>
         </section>
     )
