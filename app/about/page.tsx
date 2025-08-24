@@ -239,7 +239,7 @@ export default async function AboutPage() {
                                             {missionImages[2] && (
                                                 <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                                                     <Image
-                                                        src={missionImages[2].image || "/about/nos_valeurs.jpg"}
+                                                        src={missionImages[2].image}
                                                         alt="Représentation visuelle des valeurs du Conseil Étudiant"
                                                         width={400}
                                                         height={400}
