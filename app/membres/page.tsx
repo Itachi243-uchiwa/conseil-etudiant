@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -13,7 +14,7 @@ const ERROR_MESSAGES: Record<string, string> = {
     default: "Une erreur s'est produite. Réessayez.",
 }
 
-export default function MembresLoginPage() {
+function MembresLoginContent() {
     const { data: session, status } = useSession()
     const router = useRouter()
     const params = useSearchParams()
@@ -114,5 +115,19 @@ export default function MembresLoginPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function MembresLoginPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-background flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+            }
+        >
+            <MembresLoginContent />
+        </Suspense>
     )
 }
