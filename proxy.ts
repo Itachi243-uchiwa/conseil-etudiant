@@ -33,7 +33,7 @@ const STATIC_ASSET_EXTENSIONS = [
   ".pdf",
 ]
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next()
   const url = request.nextUrl.pathname
 
