@@ -11,6 +11,8 @@ import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
 import LuxuryHeading from "@/components/ui/luxury-heading";
 
+export const revalidate = 60
+
 export const metadata: Metadata = generateMetadata({
     title: "Événements Étudiants - Calendrier et Activités HE2B",
     description:

@@ -10,6 +10,8 @@ import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
 import LuxuryHeading from "@/components/ui/luxury-heading";
 
+export const revalidate = 60
+
 export const metadata: Metadata = generateMetadata({
     title: "Actualités - Toutes les nouvelles du Conseil Étudiant",
     description:

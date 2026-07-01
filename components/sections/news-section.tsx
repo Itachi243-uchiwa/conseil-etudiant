@@ -24,9 +24,28 @@ interface NewsItem {
     tags: string[]
 }
 
-export default function NewsSection() {
-    const [news, setNews] = useState<NewsItem[]>([])
-    const [loading, setLoading] = useState(true)
+function processNews(raw: any[]): NewsItem[] {
+    return raw
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 3)
+        .map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            excerpt: item.excerpt || (item.content ? item.content.substring(0, 150) + "..." : ""),
+            content: item.content,
+            date: item.date,
+            image: getMediaUrl(item.image || "/placeholder.svg"),
+            slug: item.slug,
+            featured: item.featured,
+            tags: item.tags || [],
+        }))
+}
+
+export default function NewsSection({ initialNews }: { initialNews?: any[] | null }) {
+    const [news, setNews] = useState<NewsItem[]>(() =>
+        initialNews && Array.isArray(initialNews) ? processNews(initialNews) : []
+    )
+    const [loading, setLoading] = useState(initialNews === undefined)
     const [error, setError] = useState<string | null>(null)
 
     const [ref, inView] = useInView({
@@ -35,35 +54,14 @@ export default function NewsSection() {
     })
 
     useEffect(() => {
+        if (initialNews !== undefined) return
         const fetchNews = async () => {
             try {
                 setLoading(true)
                 setError(null)
-
                 const newsData = await getNews()
-
                 if (newsData && Array.isArray(newsData)) {
-                    // Tri par date (plus récent en premier) et limitation aux 3 premiers
-                    const sortedNews = newsData
-                        .sort((a, b) => {
-                            const dateA = new Date(a.date).getTime()
-                            const dateB = new Date(b.date).getTime()
-                            return dateB - dateA // Tri décroissant (plus récent en premier)
-                        })
-                        .slice(0, 3) // Prendre seulement les 3 premiers
-                        .map((item: any) => ({
-                            id: item.id,
-                            title: item.title,
-                            excerpt: item.excerpt || (item.content ? item.content.substring(0, 150) + "..." : ""),
-                            content: item.content,
-                            date: item.date,
-                            image: getMediaUrl(item.image || "/placeholder.svg"),
-                            slug: item.slug,
-                            featured: item.featured,
-                            tags: item.tags || [],
-                        }))
-
-                    setNews(sortedNews)
+                    setNews(processNews(newsData))
                 } else {
                     setNews([])
                 }
@@ -74,8 +72,8 @@ export default function NewsSection() {
                 setLoading(false)
             }
         }
-
         fetchNews()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Fonction pour formater la date

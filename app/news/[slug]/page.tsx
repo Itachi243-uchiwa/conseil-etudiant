@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { CalendarDays, FileText, ExternalLink, ArrowLeft, Download } from "lucide-react"
 import ParallaxBackground from "@/components/ui/parallax-background"
-import { getNewsBySlug } from "@/lib/api"
+import { getNewsBySlug, getNews } from "@/lib/api"
 import {LuxuryButton} from "@/components/ui/luxury-button";
 
 interface PageProps {
@@ -34,6 +34,13 @@ interface NewsItem {
         url: string
         description?: string
     }>
+}
+
+export const revalidate = 60
+
+export async function generateStaticParams() {
+    const news = await getNews() || []
+    return news.map((item: any) => ({ slug: item.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

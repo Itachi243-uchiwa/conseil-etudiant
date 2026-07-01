@@ -47,6 +47,13 @@ interface VlogDto {
     mediaFiles: MediaUploadDto[];
 }
 
+export const revalidate = 60
+
+export async function generateStaticParams() {
+    const vlogs = await getVlogs() || []
+    return vlogs.map((item: any) => ({ slug: item.slug }))
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const vlog = await getVlogBySlug(slug)
@@ -65,8 +72,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function VlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const vlog = await getVlogBySlug(slug)
-    const allVlogs = await getVlogs() || []
+    const [vlog, allVlogsRaw] = await Promise.all([getVlogBySlug(slug), getVlogs()])
+    const allVlogs = allVlogsRaw || []
 
     if (!vlog) {
         notFound()

@@ -7,7 +7,7 @@ import { Scale, FileText, HelpCircle, ArrowLeft, BookOpen, Briefcase, Coins, Gra
 import ParallaxBackground from "@/components/ui/parallax-background"
 import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import LuxuryCard from "@/components/ui/luxury-card"
-import { getServiceBySlug } from "@/lib/api"
+import { getServiceBySlug, getServices } from "@/lib/api"
 import ServiceContent from "@/components/ui/service-content"
 
 interface ServiceDetailProps {
@@ -42,6 +42,13 @@ const iconMap: Record<string, any> = {
 // Fonction pour obtenir l'icône ou une icône par défaut
 const getIcon = (iconName: string) => {
     return iconMap[iconName] || Scale
+}
+
+export const revalidate = 60
+
+export async function generateStaticParams() {
+    const services = await getServices() || []
+    return services.map((item: any) => ({ slug: item.slug }))
 }
 
 export async function generateMetadata({ params }: ServiceDetailProps): Promise<Metadata> {

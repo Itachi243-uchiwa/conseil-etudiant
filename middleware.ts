@@ -64,8 +64,27 @@ export function middleware(request: NextRequest) {
   // Ajouter Vary header pour indiquer que la réponse peut varier selon ces headers
   response.headers.set("Vary", "Accept, Accept-Encoding, Cookie")
 
-  // Ajouter X-Content-Type-Options pour la sécurité
+  // Headers de sécurité
   response.headers.set("X-Content-Type-Options", "nosniff")
+  response.headers.set("X-Frame-Options", "DENY")
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
+  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+  response.headers.set(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data:",
+      "media-src 'self' https://res.cloudinary.com",
+      process.env.NODE_ENV === "development"
+        ? "connect-src 'self' http://localhost:8080 https://res.cloudinary.com"
+        : "connect-src 'self' https://admin.cehe2b.be https://res.cloudinary.com",
+      "worker-src blob:",
+      "frame-ancestors 'none'",
+    ].join("; ")
+  )
 
   return response
 }

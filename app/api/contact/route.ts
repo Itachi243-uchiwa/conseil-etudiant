@@ -4,6 +4,32 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+// Rate limiting : 5 messages par IP par heure
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT = 5
+const RATE_WINDOW_MS = 60 * 60 * 1000
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now()
+    const entry = rateLimitStore.get(ip)
+    if (!entry || now > entry.resetAt) {
+        rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
+        return true
+    }
+    if (entry.count >= RATE_LIMIT) return false
+    entry.count++
+    return true
+}
+
+function escapeHtml(str: string): string {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+}
+
 // Configuration des emails
 const EMAIL_CONFIG = {
     from: 'onboarding@resend.dev',
@@ -195,6 +221,17 @@ async function sendEmail(emailData: {
 
 export async function POST(request: NextRequest) {
     try {
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
+            ?? request.headers.get('x-real-ip')
+            ?? 'unknown'
+
+        if (!checkRateLimit(ip)) {
+            return NextResponse.json(
+                { error: 'Trop de messages envoyés. Réessayez dans une heure.' },
+                { status: 429 }
+            )
+        }
+
         const data: ContactRequest = await request.json()
 
         // Validation des données
@@ -206,15 +243,23 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        console.log('📨 Traitement du message de contact de:', data.email)
+        // Échappement HTML pour éviter l'injection dans les templates email
+        const safeData: ContactRequest = {
+            name: escapeHtml(data.name.trim()),
+            email: data.email.trim(),
+            subject: escapeHtml(data.subject.trim()),
+            message: escapeHtml(data.message.trim()),
+        }
+
+        console.log('📨 Traitement du message de contact de:', safeData.email)
 
         // Envoi de l'email principal au conseil étudiant
         const mainEmailResult = await sendEmail({
             from: EMAIL_CONFIG.from,
-            to: [EMAIL_CONFIG.to, EMAIL_CONFIG.fallbackTo], // Envoi vers les deux adresses
-            replyTo: data.email,
-            subject: `[Contact CE-HE2B] ${data.subject}`,
-            html: generateMainEmailTemplate(data)
+            to: [EMAIL_CONFIG.to, EMAIL_CONFIG.fallbackTo],
+            replyTo: safeData.email,
+            subject: `[Contact CE-HE2B] ${safeData.subject}`,
+            html: generateMainEmailTemplate(safeData)
         })
 
         if (!mainEmailResult.success) {
@@ -229,9 +274,9 @@ export async function POST(request: NextRequest) {
         // Envoi de l'email de confirmation à l'expéditeur
         const confirmationResult = await sendEmail({
             from: EMAIL_CONFIG.from,
-            to: data.email,
+            to: safeData.email,
             subject: '✅ Confirmation de réception - Conseil Étudiant HE2B',
-            html: generateConfirmationEmailTemplate(data)
+            html: generateConfirmationEmailTemplate(safeData)
         })
 
         console.log('📧 Résultat confirmation:', {

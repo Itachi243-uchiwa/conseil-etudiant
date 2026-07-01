@@ -3,9 +3,10 @@
 import { useRef } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei"
+import type { Group } from "three"
 
 function Logo() {
-  const group = useRef()
+  const group = useRef<Group>(null)
 
   return (
     <group ref={group} position={[0, 0, 0]}>

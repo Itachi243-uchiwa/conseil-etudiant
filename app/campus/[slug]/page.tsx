@@ -8,7 +8,7 @@ import { Mail, Phone, MapPin, ExternalLink } from "lucide-react"
 import ParallaxBackground from "@/components/ui/parallax-background"
 import { LuxuryHeading } from "@/components/ui/luxury-heading"
 import { LuxuryButton } from "@/components/ui/luxury-button"
-import { getCampusBySlug, getTeamMembersByCampusSlug } from "@/lib/api"
+import { getCampusBySlug, getTeamMembersByCampusSlug, getCampus } from "@/lib/api"
 
 interface EventDto {
     title: string
@@ -49,6 +49,13 @@ type Props = {
     params: Promise<{ slug: string }>
 }
 
+export const revalidate = 60
+
+export async function generateStaticParams() {
+    const campuses = await getCampus() || []
+    return campuses.map((item: any) => ({ slug: item.slug }))
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params
     const campus: CampusDto | null = await getCampusBySlug(slug)
@@ -67,9 +74,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CampusDetailPage({ params }: Props) {
     const { slug } = await params
-    const campus: CampusDto | null = await getCampusBySlug(slug)
-
-    const teamMembers: TeamMemberDto[] = await getTeamMembersByCampusSlug(slug)
+    const [campus, teamMembers]: [CampusDto | null, TeamMemberDto[]] = await Promise.all([
+        getCampusBySlug(slug),
+        getTeamMembersByCampusSlug(slug),
+    ])
 
     if (!campus) {
         notFound()

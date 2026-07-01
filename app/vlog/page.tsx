@@ -10,6 +10,8 @@ import { getVlogs } from "@/lib/api"
 import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
 
+export const revalidate = 60
+
 export const metadata: Metadata = generateMetadata({
     title: "CE HE2B TV - Vlogs et Vidéos de la Vie Étudiante",
     description:

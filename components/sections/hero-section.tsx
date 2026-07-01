@@ -22,7 +22,7 @@ interface HomepageData {
     heroItems: HeroItem[]
 }
 
-export default function HeroSection() {
+export default function HeroSection({ initialData }: { initialData?: any }) {
     const [ref, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1,
@@ -30,8 +30,8 @@ export default function HeroSection() {
 
     const [isLoaded, setIsLoaded] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 })
-    const [homepageData, setHomepageData] = useState<HomepageData | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [homepageData, setHomepageData] = useState<HomepageData | null>(initialData ?? null)
+    const [loading, setLoading] = useState(initialData === undefined)
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
@@ -51,6 +51,7 @@ export default function HeroSection() {
     }, [])
 
     useEffect(() => {
+        if (initialData !== undefined) return
         const fetchData = async () => {
             try {
                 setLoading(true)
@@ -67,8 +68,8 @@ export default function HeroSection() {
                 setLoading(false)
             }
         }
-
         fetchData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Filtrer et trier les hero items actifs

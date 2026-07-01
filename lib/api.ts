@@ -360,6 +360,27 @@ export async function getUpcomingEvents() {
     }
 }
 
+// ==================== SSR FETCH HELPERS (Server Components only) ====================
+// These use Next.js ISR caching — do NOT use inside "use client" components.
+
+async function serverFetch<T>(endpoint: string, revalidate = 60): Promise<T | null> {
+    try {
+        const res = await fetch(`${API_CONFIG.baseUrl}${endpoint}`, {
+            next: { revalidate },
+        } as RequestInit)
+        if (!res.ok) return null
+        return res.json() as Promise<T>
+    } catch {
+        return null
+    }
+}
+
+export const getHomepageSSR = () => serverFetch<any>("/api/homepage", 60)
+export const getNewsSSR = () => serverFetch<any[]>("/api/news", 60)
+export const getFeaturedNewsSSR = () => serverFetch<any[]>("/api/news/featured", 60)
+export const getFeaturedServicesSSR = () => serverFetch<any[]>("/api/services/featured", 60)
+export const getFeaturedEventsSSR = () => serverFetch<any[]>("/api/events/featured", 60)
+
 // ==================== UTILITAIRES ====================
 export function getMediaUrl(url: string): string {
     if (!url) return ""

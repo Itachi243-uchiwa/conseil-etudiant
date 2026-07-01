@@ -25,6 +25,8 @@ interface CampusDto {
     facilities: string[]
 }
 
+export const revalidate = 60
+
 export const metadata: Metadata = generateMetadata({
     title: "Nos Campus - Découvrez les Sites de la HE2B",
     description:

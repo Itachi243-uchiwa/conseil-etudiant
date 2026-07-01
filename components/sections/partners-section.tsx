@@ -22,17 +22,18 @@ interface HomepageData {
     partnersDescription?: string
 }
 
-export default function PartnersSection() {
+export default function PartnersSection({ initialData }: { initialData?: any }) {
     const [ref, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1,
     })
 
-    const [homepageData, setHomepageData] = useState<HomepageData | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [homepageData, setHomepageData] = useState<HomepageData | null>(initialData ?? null)
+    const [loading, setLoading] = useState(initialData === undefined)
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
+        if (initialData !== undefined) return
         const fetchData = async () => {
             try {
                 setLoading(true)
@@ -49,8 +50,8 @@ export default function PartnersSection() {
                 setLoading(false)
             }
         }
-
         fetchData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Filtrer et trier les partenaires actifs

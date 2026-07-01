@@ -11,6 +11,8 @@ import { generateMetadata, generateStructuredData } from "@/lib/seo"
 import { StructuredData } from "@/components/StructuredData"
 import LuxuryHeading from "@/components/ui/luxury-heading";
 
+export const revalidate = 60
+
 export const metadata: Metadata = generateMetadata({
     title: "À Propos - Histoire, Mission et Équipe du Conseil Étudiant",
     description:
@@ -59,8 +61,10 @@ const getIconComponent = (iconName: string) => {
 }
 
 export default async function AboutPage() {
-    const teamMembers: TeamMemberDto[] = await getOfficeMembers()
-    const missions: MissionDto[] = await getMissions()
+    const [teamMembers, missions]: [TeamMemberDto[], MissionDto[]] = await Promise.all([
+        getOfficeMembers(),
+        getMissions(),
+    ])
     const missionImages = missions.slice(0, 3)
 
     const structuredData = generateStructuredData("organization", {})
@@ -239,7 +243,7 @@ export default async function AboutPage() {
                                             {missionImages[2] && (
                                                 <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                                                     <Image
-                                                        src={missionImages[2].image}
+                                                        src={missionImages[2].image || "/about/nos_valeurs.jpg"}
                                                         alt="Représentation visuelle des valeurs du Conseil Étudiant"
                                                         width={400}
                                                         height={400}

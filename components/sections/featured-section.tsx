@@ -19,9 +19,77 @@ interface FeaturedItem {
     date?: string
 }
 
-export default function FeaturedSection() {
-    const [featuredItems, setFeaturedItems] = useState<FeaturedItem[]>([])
-    const [loading, setLoading] = useState(true)
+function buildFeaturedItems(
+    newsData: any[] | null,
+    servicesData: any[] | null,
+    eventsData: any[] | null,
+): FeaturedItem[] {
+    const items: FeaturedItem[] = []
+
+    if (newsData && Array.isArray(newsData)) {
+        newsData.forEach((news: any) => {
+            items.push({
+                id: news.id,
+                title: news.title,
+                description: news.excerpt || (news.content ? news.content.substring(0, 150) + "..." : ""),
+                image: getMediaUrl(news.image || "/default-news.jpg"),
+                link: `/news/${news.slug}`,
+                linkText: "Lire l'article",
+                type: "news",
+                date: news.date,
+            })
+        })
+    }
+
+    if (servicesData && Array.isArray(servicesData)) {
+        servicesData.forEach((service: any) => {
+            items.push({
+                id: service.id,
+                title: service.title,
+                description: service.description || (service.content ? service.content.substring(0, 150) + "..." : ""),
+                image: getMediaUrl(service.image || "/default-service.jpg"),
+                link: `/services/${service.slug}`,
+                linkText: "Découvrir le service",
+                type: "service",
+                date: service.updatedAt || service.createdAt,
+            })
+        })
+    }
+
+    if (eventsData && Array.isArray(eventsData)) {
+        eventsData.forEach((event: any) => {
+            items.push({
+                id: event.id,
+                title: event.title,
+                description: event.description || (event.longDescription ? event.longDescription.substring(0, 150) + "..." : ""),
+                image: getMediaUrl(event.image || "/default-event.jpg"),
+                link: `/events/${event.slug}`,
+                linkText: "En savoir plus",
+                type: "event",
+                date: event.date,
+            })
+        })
+    }
+
+    return items
+        .sort((a, b) => (a.date && b.date ? new Date(b.date).getTime() - new Date(a.date).getTime() : 0))
+        .slice(0, 6)
+}
+
+export default function FeaturedSection({
+    initialNews,
+    initialServices,
+    initialEvents,
+}: {
+    initialNews?: any[] | null
+    initialServices?: any[] | null
+    initialEvents?: any[] | null
+}) {
+    const hasInitialData = initialNews !== undefined
+    const [featuredItems, setFeaturedItems] = useState<FeaturedItem[]>(() =>
+        hasInitialData ? buildFeaturedItems(initialNews ?? null, initialServices ?? null, initialEvents ?? null) : []
+    )
+    const [loading, setLoading] = useState(!hasInitialData)
     const [error, setError] = useState<string | null>(null)
 
     const [ref, inView] = useInView({
@@ -30,80 +98,17 @@ export default function FeaturedSection() {
     })
 
     useEffect(() => {
+        if (hasInitialData) return
         const fetchFeaturedContent = async () => {
             try {
                 setLoading(true)
                 setError(null)
-
-                // Récupération parallèle de tous les contenus featured
                 const [newsData, servicesData, eventsData] = await Promise.all([
                     getFeaturedNews(),
                     getFeaturedServices(),
                     getFeaturedEvents(),
                 ])
-
-                const allFeaturedItems: FeaturedItem[] = []
-
-                // Transformation des news (NewsDto)
-                if (newsData && Array.isArray(newsData)) {
-                    newsData.forEach((news: any) => {
-                        allFeaturedItems.push({
-                            id: news.id,
-                            title: news.title,
-                            description: news.excerpt || (news.content ? news.content.substring(0, 150) + "..." : ""),
-                            image: getMediaUrl(news.image || "/default-news.jpg"),
-                            link: `/news/${news.slug}`,
-                            linkText: "Lire l'article",
-                            type: "news",
-                            date: news.date,
-                        })
-                    })
-                }
-
-                // Transformation des services (ServiceDto)
-                if (servicesData && Array.isArray(servicesData)) {
-                    servicesData.forEach((service: any) => {
-                        allFeaturedItems.push({
-                            id: service.id,
-                            title: service.title,
-                            description: service.description || (service.content ? service.content.substring(0, 150) + "..." : ""),
-                            image: getMediaUrl(service.image || "/default-service.jpg"),
-                            link: `/services/${service.slug}`,
-                            linkText: "Découvrir le service",
-                            type: "service",
-                            date: service.updatedAt || service.createdAt,
-                        })
-                    })
-                }
-
-                // Transformation des événements (EventDto)
-                if (eventsData && Array.isArray(eventsData)) {
-                    eventsData.forEach((event: any) => {
-                        allFeaturedItems.push({
-                            id: event.id,
-                            title: event.title,
-                            description:
-                                event.description || (event.longDescription ? event.longDescription.substring(0, 150) + "..." : ""),
-                            image: getMediaUrl(event.image || "/default-event.jpg"),
-                            link: `/events/${event.slug}`,
-                            linkText: "En savoir plus",
-                            type: "event",
-                            date: event.date,
-                        })
-                    })
-                }
-
-                // Tri par date (plus récent en premier) et limitation à 6 éléments
-                const sortedItems = allFeaturedItems
-                    .sort((a, b) => {
-                        if (a.date && b.date) {
-                            return new Date(b.date).getTime() - new Date(a.date).getTime()
-                        }
-                        return 0
-                    })
-                    .slice(0, 6)
-
-                setFeaturedItems(sortedItems)
+                setFeaturedItems(buildFeaturedItems(newsData, servicesData, eventsData))
             } catch (err) {
                 console.error("Error fetching featured content:", err)
                 setError("Erreur lors du chargement du contenu featured")
@@ -111,8 +116,8 @@ export default function FeaturedSection() {
                 setLoading(false)
             }
         }
-
         fetchFeaturedContent()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Affichage du loading

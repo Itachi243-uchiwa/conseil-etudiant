@@ -18,6 +18,15 @@ const nextConfig = {
         optimizePackageImports: ['lucide-react', '@/components/ui'],
     },
     staticPageGenerationTimeout: 120,
+    async rewrites() {
+        const backendUrl = process.env.NEXT_PUBLIC_BACK_PUBLIC_API_URL ?? "http://localhost:8080"
+        return [
+            {
+                source: "/api/backend/:path*",
+                destination: `${backendUrl}/api/:path*`,
+            },
+        ]
+    },
     async headers() {
         return [
             {
@@ -28,7 +37,6 @@ const nextConfig = {
                     {key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization"},
                 ],
             },
-            // ... vos autres règles de cache
         ];
     },
 }
