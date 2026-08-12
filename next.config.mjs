@@ -18,6 +18,9 @@ const nextConfig = {
         optimizePackageImports: ['lucide-react', '@/components/ui'],
     },
     staticPageGenerationTimeout: 120,
+    // MJML embarque des dépendances Node (fs, resolvers dynamiques) : on le laisse
+    // hors du bundle serveur pour qu'il soit chargé tel quel à l'exécution.
+    serverExternalPackages: ["mjml"],
     async rewrites() {
         const backendUrl = process.env.NEXT_PUBLIC_BACK_PUBLIC_API_URL ?? "http://localhost:8080"
         return [

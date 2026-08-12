@@ -8,7 +8,7 @@ import { useTheme } from "next-themes"
 import LogoDore from "@/components/ui/logo-dore"
 import {
     LayoutDashboard, Vote, FileText, Users, Newspaper,
-    LogOut, ChevronRight, Menu, X, Sun, Moon
+    LogOut, ChevronRight, Menu, X, Sun, Moon, Mail
 } from "lucide-react"
 
 const NAV = [
@@ -17,6 +17,7 @@ const NAV = [
     { href: "/membres/bibliotheque", label: "Bibliothèque",          icon: FileText },
     { href: "/membres/rapports",     label: "Mes rapports",          icon: Users },
     { href: "/membres/actualites",   label: "Actualités membres",    icon: Newspaper },
+    { href: "/membres/mails",        label: "Générateur de mails",   icon: Mail },
 ]
 
 export default function MemberShell({ children }: { children: ReactNode }) {
