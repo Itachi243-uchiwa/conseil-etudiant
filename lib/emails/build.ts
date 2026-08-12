@@ -31,7 +31,7 @@ export function buildMjml(input: {
     const ctx: TemplateContext = {
         v: key => asText(values[key]),
         items: key => asItems(values[key]),
-        rich: key => richTextToHtml(asText(values[key]), theme.accentDeep),
+        rich: key => richTextToHtml(asText(values[key]), theme),
         theme,
         brand: BRAND,
     }

@@ -32,19 +32,41 @@ export const BRAND: BrandConfig = {
  * `header` un violet-nuit dérivé du thème sombre.
  */
 export const INK = {
-    page: "#EFF2FC",
+    page: "#ECEFFA",
     card: "#FFFFFF",
     header: "#171334",
-    title: "#191634",
-    body: "#4A4763",
-    muted: "#7B7894",
-    line: "#E5E7F4",
-    soft: "#F7F8FD",
+    title: "#181533",
+    body: "#474461",
+    muted: "#797691",
+    line: "#E7E9F6",
+    soft: "#F6F7FD",
+    /** Séparateur visible sur le fond de page, hors carte (mentions légales). */
+    faint: "#B6B9D2",
     gold: "#D4AF37",
+    /** Neutres posés sur le bandeau sombre du pied de mail. */
+    onDark: "#FFFFFF",
+    onDarkSoft: "#A8A3C6",
+    onDarkMuted: "#8A85AD",
+    onDarkLine: "#2C2657",
 }
 
 export const EMAIL_FONT =
     "'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif"
+
+/**
+ * Hex → `rgba()`. Sert aux ombres douces posées via `<mj-style>` : les clients
+ * qui les gèrent (Apple Mail, Gmail web) y gagnent du relief, les autres
+ * affichent simplement des blocs plats.
+ */
+export function rgba(hex: string, alpha: number): string {
+    const value = hex.replace("#", "")
+    const full = value.length === 3 ? value.split("").map(c => c + c).join("") : value
+    const int = Number.parseInt(full, 16)
+    const r = (int >> 16) & 255
+    const g = (int >> 8) & 255
+    const b = int & 255
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
 
 /**
  * Thèmes disponibles : l'identité CE générale, puis un thème par campus dont

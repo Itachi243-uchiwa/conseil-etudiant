@@ -102,7 +102,7 @@ export const newsletterTemplate: EmailTemplate = {
                     articleBlock(theme, {
                         index: i + 1,
                         title: (article.title ?? "").trim(),
-                        html: richTextToHtml(article.text ?? "", theme.accentDeep),
+                        html: richTextToHtml(article.text ?? "", theme),
                         url: article.url ?? "",
                         linkLabel: (article.linkLabel ?? "").trim() || "Lire la suite",
                     }),

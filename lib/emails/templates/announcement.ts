@@ -7,15 +7,13 @@ import {
     badgeBlock,
     buttonBlock,
     calloutBlock,
-    dividerBlock,
     emailDocument,
     heroBlock,
+    highlightBlock,
     richBlock,
     signatureBlock,
 } from "../blocks"
-import { esc } from "../format"
-import { EMAIL_FONT, INK } from "../themes"
-import type { EmailTemplate, EmailTheme } from "../types"
+import type { EmailTemplate } from "../types"
 import {
     buttonLabelField,
     buttonUrlField,
@@ -28,25 +26,6 @@ import {
     subtitleField,
     titleField,
 } from "./shared"
-
-/** Phrase clé encadrée, façon « à retenir ». */
-function highlightBlock(theme: EmailTheme, text: string): string {
-    if (!text) return ""
-    return `
-    <mj-section background-color="${INK.card}" padding="26px 32px 0">
-      <mj-column>
-        <mj-text padding="0">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td style="border:1px solid ${theme.accent}40;border-radius:12px;background-color:${theme.tint};padding:20px 22px;font-family:${EMAIL_FONT};font-size:17px;line-height:1.5;font-weight:600;color:${INK.title};">
-                ${esc(text)}
-              </td>
-            </tr>
-          </table>
-        </mj-text>
-      </mj-column>
-    </mj-section>`
-}
 
 export const announcementTemplate: EmailTemplate = {
     id: "announcement",
@@ -103,7 +82,6 @@ export const announcementTemplate: EmailTemplate = {
                 richBlock(rich("content")),
                 buttonBlock(theme, v("buttonLabel"), v("buttonUrl")),
                 calloutBlock(theme, v("calloutTitle"), rich("calloutText")),
-                dividerBlock(),
                 signatureBlock(v("signature")),
             ].join(""),
         }),

@@ -11,6 +11,7 @@ import {
     heroBlock,
     richBlock,
     signatureBlock,
+    spacerBlock,
 } from "../blocks"
 import type { EmailTemplate } from "../types"
 import {
@@ -82,7 +83,7 @@ export const eventTemplate: EmailTemplate = {
             footerNote: v("footerNote"),
             content: [
                 heroBlock({ theme, eyebrow: v("eyebrow"), title: v("title"), subtitle: v("subtitle") }),
-                `<mj-section background-color="#FFFFFF" padding="0 0 26px"><mj-column><mj-spacer height="1px" /></mj-column></mj-section>`,
+                spacerBlock("30px"),
                 detailsBlock(theme, [
                     { label: "Date", value: v("eventDate") },
                     { label: "Heure", value: v("eventTime") },

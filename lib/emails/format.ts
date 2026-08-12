@@ -12,7 +12,11 @@
  *   > citation          ligne vide = nouveau paragraphe
  */
 
-import { INK } from "./themes"
+import { EMAIL_FONT, INK } from "./themes"
+import type { EmailTheme } from "./types"
+
+/** Palette minimale nécessaire au rendu du contenu riche. */
+export type RichPalette = Pick<EmailTheme, "accent" | "accentDeep" | "tint">
 
 /** Échappe le texte destiné à du HTML/MJML. */
 export function esc(input: string): string {
@@ -57,9 +61,10 @@ function inline(raw: string, opts: InlineOptions): string {
 }
 
 const P_STYLE = (last: boolean) =>
-    `margin:0 0 ${last ? "0" : "16px"};font-size:16px;line-height:1.65;color:${INK.body};`
-const H_STYLE = `margin:26px 0 10px;font-size:18px;line-height:1.4;font-weight:700;color:${INK.title};`
-const LI_STYLE = `margin:0 0 8px;font-size:16px;line-height:1.6;color:${INK.body};`
+    `margin:0 0 ${last ? "0" : "18px"};font-size:16px;line-height:1.7;color:${INK.body};`
+const H_STYLE = (first: boolean) =>
+    `margin:${first ? "0" : "30px"} 0 12px;font-size:18px;line-height:1.4;font-weight:700;color:${INK.title};letter-spacing:-0.2px;`
+const CELL = `font-family:${EMAIL_FONT};font-size:16px;line-height:1.7;color:${INK.body};`
 
 type Block =
     | { kind: "p"; lines: string[] }
@@ -117,14 +122,38 @@ function toBlocks(source: string): Block[] {
 }
 
 /**
+ * Listes rendues en table plutôt qu'en `<ul>` : c'est le seul moyen fiable
+ * d'avoir des puces colorées et des marges identiques d'Outlook à Gmail.
+ */
+function listTable(
+    lines: string[],
+    marker: (index: number) => string,
+    markerWidth: number,
+    last: boolean,
+    opts: InlineOptions,
+): string {
+    const rows = lines
+        .map((line, i) => {
+            const bottom = i === lines.length - 1 ? "0" : "10px"
+            return `<tr>
+              <td width="${markerWidth}" valign="top" style="${CELL}padding:0 0 ${bottom};width:${markerWidth}px;">${marker(i)}</td>
+              <td valign="top" style="${CELL}padding:0 0 ${bottom};">${inline(line, opts)}</td>
+            </tr>`
+        })
+        .join("")
+
+    return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;margin:0 0 ${last ? "0" : "18px"};"><tbody>${rows}</tbody></table>`
+}
+
+/**
  * Convertit le contenu saisi en HTML prêt à être injecté dans un `<mj-text>`.
  * Retourne "" si le contenu est vide (le template peut alors omettre le bloc).
  */
-export function richTextToHtml(source: string, accentDeep: string): string {
+export function richTextToHtml(source: string, palette: RichPalette): string {
     const blocks = toBlocks(source)
     if (blocks.length === 0) return ""
 
-    const opts: InlineOptions = { linkColor: accentDeep }
+    const opts: InlineOptions = { linkColor: palette.accentDeep }
 
     return blocks
         .map((block, index) => {
@@ -132,22 +161,34 @@ export function richTextToHtml(source: string, accentDeep: string): string {
 
             switch (block.kind) {
                 case "h":
-                    return `<h3 style="${index === 0 ? H_STYLE.replace("margin:26px", "margin:0px") : H_STYLE}">${inline(block.text, opts)}</h3>`
+                    return `<h3 style="${H_STYLE(index === 0)}">${inline(block.text, opts)}</h3>`
 
                 case "ul":
-                    return `<ul style="margin:0 0 ${last ? "0" : "16px"};padding:0 0 0 22px;">${block.lines
-                        .map(li => `<li style="${LI_STYLE}">${inline(li, opts)}</li>`)
-                        .join("")}</ul>`
+                    return listTable(
+                        block.lines,
+                        () =>
+                            `<span style="color:${palette.accent};font-size:17px;line-height:1.7;">&bull;</span>`,
+                        20,
+                        last,
+                        opts,
+                    )
 
                 case "ol":
-                    return `<ol style="margin:0 0 ${last ? "0" : "16px"};padding:0 0 0 22px;">${block.lines
-                        .map(li => `<li style="${LI_STYLE}">${inline(li, opts)}</li>`)
-                        .join("")}</ol>`
+                    return listTable(
+                        block.lines,
+                        i =>
+                            `<span style="color:${palette.accentDeep};font-weight:700;">${i + 1}.</span>`,
+                        26,
+                        last,
+                        opts,
+                    )
 
                 case "quote":
-                    return `<blockquote style="margin:0 0 ${last ? "0" : "16px"};padding:2px 0 2px 16px;border-left:3px solid ${accentDeep};font-size:16px;line-height:1.6;color:${INK.title};font-style:italic;">${block.lines
-                        .map(l => inline(l, opts))
-                        .join("<br />")}</blockquote>`
+                    return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:separate;margin:0 0 ${last ? "0" : "18px"};"><tbody><tr>
+                      <td style="background-color:${palette.tint};border-left:3px solid ${palette.accent};border-radius:0 12px 12px 0;padding:16px 20px;${CELL}color:${INK.title};font-style:italic;">${block.lines
+                          .map(l => inline(l, opts))
+                          .join("<br />")}</td>
+                    </tr></tbody></table>`
 
                 default:
                     return `<p style="${P_STYLE(last)}">${block.lines.map(l => inline(l, opts)).join("<br />")}</p>`
