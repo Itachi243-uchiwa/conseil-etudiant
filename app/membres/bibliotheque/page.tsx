@@ -3,10 +3,11 @@
 import MemberShell from "@/components/membres/MemberShell"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { getDocuments, deleteMyDocument } from "@/lib/members-api"
+import { getDocuments, getSessions, deleteMyDocument } from "@/lib/members-api"
 import { formatFileSize } from "@/lib/utils"
-import { FileText, Download, Calendar, User, Filter, Paperclip, Link2, Trash2 } from "lucide-react"
+import { FileText, Download, Calendar, User, Filter, Paperclip, Link2, Trash2, Plus } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import DocumentUploadForm from "@/components/membres/DocumentUploadForm"
 
 const DOC_TYPES = [
     { key: "", label: "Tous" },
@@ -34,6 +35,8 @@ export default function BibliothequePage() {
     const [search, setSearch] = useState("")
     const [onlyMine, setOnlyMine] = useState(false)
     const [deletingId, setDeletingId] = useState<number | null>(null)
+    const [showForm, setShowForm] = useState(false)
+    const [sessions, setSessions] = useState<any[]>([])
 
     const user = session?.user
     const myEmail = user?.email?.toLowerCase() ?? ""
@@ -41,6 +44,11 @@ export default function BibliothequePage() {
     // Fetch ALL docs once — filter/search happen client-side instantly
     useEffect(() => {
         getDocuments().then(setAllDocs).finally(() => setLoading(false))
+    }, [])
+
+    // Les séances servent à rattacher un dépôt (et à savoir lesquelles on préside)
+    useEffect(() => {
+        getSessions().then(s => setSessions(Array.isArray(s) ? s : []))
     }, [])
 
     const isMine = (doc: any) => !!myEmail && doc.authorEmail?.toLowerCase() === myEmail
@@ -74,10 +82,31 @@ export default function BibliothequePage() {
     return (
         <MemberShell>
             <div className="space-y-6">
-                <div>
-                    <h1 className="text-2xl font-bold">Bibliothèque documentaire</h1>
-                    <p className="text-muted-foreground mt-1">Accédez à tous les documents institutionnels du CE</p>
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold">Bibliothèque documentaire</h1>
+                        <p className="text-muted-foreground mt-1">Accédez à tous les documents institutionnels du CE</p>
+                    </div>
+                    <button
+                        onClick={() => setShowForm(v => !v)}
+                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm px-4 py-2.5 rounded-xl transition-all shrink-0"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Déposer un document
+                    </button>
                 </div>
+
+                {showForm && (
+                    <DocumentUploadForm
+                        sessions={sessions}
+                        allowExternalLink
+                        onCancel={() => setShowForm(false)}
+                        onDone={async () => {
+                            setShowForm(false)
+                            setAllDocs(await getDocuments())
+                        }}
+                    />
+                )}
 
                 {/* Filtres & recherche */}
                 <div className="space-y-3">

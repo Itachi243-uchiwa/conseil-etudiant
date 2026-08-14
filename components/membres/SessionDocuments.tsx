@@ -2,20 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { getDocuments, uploadDocument, deleteMyDocument } from "@/lib/members-api"
+import { getDocuments, deleteMyDocument } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
-import { FileText, Plus, Upload } from "lucide-react"
-import FileDropzone from "./FileDropzone"
+import { FileText, Plus } from "lucide-react"
+import DocumentUploadForm from "./DocumentUploadForm"
 import DocumentRow from "./DocumentRow"
-
-/** Le président de séance dépose les pièces officielles ; tout membre dépose un rapport. */
-const PRESIDENT_TYPES = [
-    { key: "ORDRE_DU_JOUR", label: "Ordre du jour" },
-    { key: "PV", label: "Procès-verbal" },
-    { key: "DECISION", label: "Décision / résolution" },
-    { key: "RAPPORT", label: "Rapport" },
-]
-const MEMBER_TYPES = [{ key: "RAPPORT", label: "Rapport" }]
 
 export default function SessionDocuments({
     sessionId,
@@ -32,14 +23,7 @@ export default function SessionDocuments({
     const [docs, setDocs] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
-    const [submitting, setSubmitting] = useState(false)
     const [deletingId, setDeletingId] = useState<number | null>(null)
-
-    const availableTypes = isPresident ? PRESIDENT_TYPES : MEMBER_TYPES
-    const [type, setType] = useState(availableTypes[0].key)
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [file, setFile] = useState<File | null>(null)
 
     const user = session?.user
     const myEmail = user?.email?.toLowerCase() ?? ""
@@ -52,34 +36,6 @@ export default function SessionDocuments({
     useEffect(() => {
         reload().finally(() => setLoading(false))
     }, [reload])
-
-    const resetForm = () => {
-        setTitle("")
-        setDescription("")
-        setFile(null)
-        setType(availableTypes[0].key)
-    }
-
-    const submit = async () => {
-        if (!title.trim() || !file || !user) return
-        setSubmitting(true)
-        try {
-            await uploadDocument(
-                { title: title.trim(), description: description.trim(), type, sessionId },
-                file,
-                user.email ?? "",
-                user.memberName ?? ""
-            )
-            resetForm()
-            setShowForm(false)
-            await reload()
-            toast({ title: "Document déposé", description: title.trim() })
-        } catch (e: any) {
-            toast({ title: "Erreur", description: e.message, variant: "destructive" })
-        } finally {
-            setSubmitting(false)
-        }
-    }
 
     const handleDelete = async (doc: any) => {
         if (!user) return
@@ -110,76 +66,16 @@ export default function SessionDocuments({
             </div>
 
             {showForm && (
-                <div className="border border-primary/30 bg-primary/5 rounded-2xl p-5 space-y-4">
-                    <div>
-                        <label className="text-xs text-muted-foreground mb-1.5 block">Type de document</label>
-                        <div className="flex gap-2 flex-wrap">
-                            {availableTypes.map(({ key, label }) => (
-                                <button
-                                    key={key}
-                                    type="button"
-                                    onClick={() => setType(key)}
-                                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                                        type === key
-                                            ? "bg-primary border-primary text-primary-foreground"
-                                            : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
-                                    }`}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
-                        {!isPresident && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                                Seul le président de séance peut déposer un ordre du jour, un PV ou une décision.
-                            </p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-muted-foreground mb-1 block">Titre *</label>
-                        <input
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            placeholder={sessionTitle ? `Ex. PV — ${sessionTitle}` : "Titre du document"}
-                            className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary placeholder:text-muted-foreground"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-muted-foreground mb-1 block">Description (optionnel)</label>
-                        <textarea
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            rows={2}
-                            className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary placeholder:text-muted-foreground resize-none"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs text-muted-foreground mb-1 block">Fichier *</label>
-                        <FileDropzone file={file} onChange={setFile} disabled={submitting} />
-                    </div>
-
-                    <div className="flex gap-2">
-                        <button
-                            onClick={submit}
-                            disabled={submitting || !title.trim() || !file}
-                            className="flex items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-50 text-primary-foreground text-sm px-5 py-2.5 rounded-xl transition-all"
-                        >
-                            {submitting
-                                ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                : <Upload className="w-4 h-4" />}
-                            {submitting ? "Envoi du fichier…" : "Déposer"}
-                        </button>
-                        <button
-                            onClick={() => { setShowForm(false); resetForm() }}
-                            className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5 rounded-xl transition-all"
-                        >
-                            Annuler
-                        </button>
-                    </div>
-                </div>
+                <DocumentUploadForm
+                    fixedSessionId={sessionId}
+                    fixedSessionTitle={sessionTitle}
+                    presidesFixedSession={isPresident}
+                    onCancel={() => setShowForm(false)}
+                    onDone={async () => {
+                        setShowForm(false)
+                        await reload()
+                    }}
+                />
             )}
 
             {loading ? (
