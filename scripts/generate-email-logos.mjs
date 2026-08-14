@@ -29,8 +29,8 @@ const OUT_DIR = resolve(ROOT, "public/emails/logos")
  * (valeurs issues du back-office, endpoint /api/campus).
  */
 const CAMPUS_ACCENTS = {
-    defre: "#007933",
-    nivelles: "#E6007D",
+    // Defré et Nivelles ont fusionné dans le département pédagogique, qui n'a pas
+    // de lettrage propre : son nom s'écrit en toutes lettres dans l'en-tête.
     ises: "#7E1817",
     isek: "#99D218",
     iessid: "#D98B43",

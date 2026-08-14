@@ -4,11 +4,12 @@ import { use, useEffect, useState, useRef, useCallback, type ReactElement } from
 import { useSession } from "next-auth/react"
 import MemberShell from "@/components/membres/MemberShell"
 import SessionDocuments from "@/components/membres/SessionDocuments"
-import { getSession, getSubjects, castVote, openVote, closeVote, createSubject } from "@/lib/members-api"
+import ProxyPanel from "@/components/membres/ProxyPanel"
+import { getSession, getSubjects, getProxies, castVote, openVote, closeVote, createSubject } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
 import {
     ThumbsUp, ThumbsDown, Minus, Plus, Play, Square, BarChart3, CheckCircle2,
-    Clock, Users, Timer, ChevronDown, Trash2, Trophy, Scale, ListChecks,
+    Clock, Users, Timer, ChevronDown, Trash2, Trophy, Scale, ListChecks, UserCheck,
 } from "lucide-react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts"
 
@@ -49,6 +50,8 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
     const { toast } = useToast()
     const [agSession, setAgSession] = useState<any>(null)
     const [subjects, setSubjects] = useState<any[]>([])
+    const [proxies, setProxies] = useState<any[]>([])
+    const [proxiesLoading, setProxiesLoading] = useState(true)
     const [loading, setLoading] = useState(true)
     const [voting, setVoting] = useState<Record<number, boolean>>({})
     const [showNewForm, setShowNewForm] = useState(false)
@@ -60,10 +63,20 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
     const user = session?.user
     const isPresident = !!(user?.email && agSession?.presidentEmail?.toLowerCase() === user.email.toLowerCase())
 
+    // Procuration portée par le membre connecté : sa voix vaut alors double.
+    const myProxy = proxies.find(
+        (p: any) => p.holderEmail?.toLowerCase() === user?.email?.toLowerCase()
+    ) ?? null
+
     const refreshSubjects = useCallback(async () => {
         const subs = await getSubjects(Number(id), user?.email ?? "", user?.memberName ?? "")
         setSubjects(Array.isArray(subs) ? subs : [])
     }, [id, user])
+
+    const refreshProxies = useCallback(async () => {
+        const list = await getProxies(Number(id))
+        setProxies(Array.isArray(list) ? list : [])
+    }, [id])
 
     useEffect(() => {
         if (!user) return
@@ -75,6 +88,10 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
             setSubjects(Array.isArray(subs) ? subs : [])
         }).finally(() => setLoading(false))
     }, [id, user])
+
+    useEffect(() => {
+        refreshProxies().finally(() => setProxiesLoading(false))
+    }, [refreshProxies])
 
     // Un sujet ouvert s'auto-déplie — tant que le membre ne l'a pas replié lui-même
     useEffect(() => {
@@ -138,7 +155,12 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
             const label = ballot.optionId
                 ? subject.options?.find((o: any) => o.id === ballot.optionId)?.label ?? "votre choix"
                 : VOTE_OPTIONS.find(o => o.key === ballot.choice)?.label ?? ballot.choice
-            toast({ title: "Vote enregistré", description: `Vous avez voté : ${label}` })
+            toast({
+                title: "Vote enregistré",
+                description: myProxy
+                    ? `Vous avez voté : ${label} — pour vous et pour ${myProxy.grantorName}`
+                    : `Vous avez voté : ${label}`,
+            })
         } catch (e: any) {
             toast({ title: "Erreur", description: e.message, variant: "destructive" })
         } finally {
@@ -272,10 +294,22 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
                                 onOpen={handleOpen}
                                 onClose={handleClose}
                                 voting={voting[subject.id] ?? false}
+                                proxyFor={myProxy?.grantorName ?? null}
                             />
                         ))
                     )}
                 </div>
+
+                {/* Procurations des membres absents */}
+                <ProxyPanel
+                    sessionId={Number(id)}
+                    sessionDate={agSession?.sessionDate}
+                    proxies={proxies}
+                    loading={proxiesLoading}
+                    isPresident={isPresident}
+                    closed={agSession?.status === "CLOSED"}
+                    onReload={refreshProxies}
+                />
 
                 {/* Documents rattachés à la séance */}
                 <SessionDocuments
@@ -446,7 +480,7 @@ function NewSubjectForm({
 // ── Carte sujet (accordéon) ───────────────────────────────────────────────────
 
 function VoteSubjectCard({
-    subject, isPresident, liveResult, open, onToggle, onVote, onOpen, onClose, voting,
+    subject, isPresident, liveResult, open, onToggle, onVote, onOpen, onClose, voting, proxyFor,
 }: {
     subject: any
     isPresident: boolean
@@ -457,6 +491,8 @@ function VoteSubjectCard({
     onOpen: (id: number) => Promise<void>
     onClose: (id: number) => Promise<void>
     voting: boolean
+    /** Nom du membre absent dont le votant porte la procuration, le cas échéant. */
+    proxyFor?: string | null
 }) {
     const [pending, setPending] = useState<string | null>(null)
     const results = liveResult ?? subject.results
@@ -562,6 +598,14 @@ function VoteSubjectCard({
                             <p className="text-muted-foreground text-sm">{subject.description}</p>
                         )}
 
+                        {/* Procuration : le membre vote pour deux */}
+                        {proxyFor && subject.status === "OPEN" && !subject.hasVoted && (
+                            <p className="flex items-center gap-2 text-primary text-xs bg-primary/10 border border-primary/20 rounded-xl px-3.5 py-2">
+                                <UserCheck className="w-3.5 h-3.5 shrink-0" />
+                                Votre bulletin comptera aussi pour {proxyFor} (procuration).
+                            </p>
+                        )}
+
                         {/* Bulletin */}
                         {subject.status === "OPEN" && !subject.hasVoted && (
                             choiceVote ? (
@@ -624,6 +668,7 @@ function VoteSubjectCard({
                                             ? subject.myVote
                                             : VOTE_OPTIONS.find(o => o.key === subject.myVote)?.label ?? subject.myVote}
                                     </strong>
+                                    {proxyFor && <> — déposé pour vous et pour <strong>{proxyFor}</strong></>}
                                 </span>
                             </div>
                         )}

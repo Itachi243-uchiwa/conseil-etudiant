@@ -67,11 +67,15 @@ export interface EmailTheme {
     tint: string
     /** Page campus correspondante sur le site. */
     url?: string
+    /** Libellé du lien vers `url` dans le pied de mail. */
+    linkLabel?: string
     /**
      * Préfixe des logos PNG servis depuis /public/emails/logos
      * (générés par scripts/generate-email-logos.mjs).
+     * Absent pour une entité sans lettrage propre : l'en-tête affiche alors le
+     * `kicker` en toutes lettres.
      */
-    mark: string
+    mark?: string
 }
 
 export interface BrandConfig {

@@ -329,7 +329,7 @@ export default function MailStudio() {
             <section className="space-y-3">
                 <div className="flex items-baseline gap-2">
                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">Identité</p>
-                    <span className="text-xs text-muted-foreground">— couleurs et logo du campus</span>
+                    <span className="text-xs text-muted-foreground">— couleurs et logo de l'entité</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {EMAIL_THEMES.map(item => {

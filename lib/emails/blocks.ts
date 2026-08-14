@@ -23,8 +23,14 @@ export function headerBlock(theme: EmailTheme, brand: BrandConfig = BRAND): stri
     // Le filet d'accent coiffe la carte : la couleur du campus se lit avant même
     // le premier mot. Le logo officiel du CE reste à gauche ; à droite, le
     // verrouillage du campus dans sa propre couleur (co-branding immédiat).
-    const campusMark = theme.kicker
+    // Trois cas : lettrage campus, entité sans lettrage propre (département
+    // pédagogique — son nom s'écrit alors en toutes lettres), ou identité générale.
+    const campusMark = theme.mark && theme.kicker
         ? `<mj-image src="${esc(`${brand.markBaseUrl}/${theme.mark}-accent.png`)}" alt="${esc(theme.kicker)}" width="54px" align="right" padding="0" />`
+        : theme.kicker
+        ? `<mj-text align="right" padding="0" css-class="ce-header-note">
+             <span style="${LABEL(theme.accentDeep, "10px")}line-height:1.6;">${esc(theme.kicker)}</span>
+           </mj-text>`
         : `<mj-text align="right" padding="0" css-class="ce-header-note">
              <span style="${LABEL(INK.muted, "10px")}line-height:1.6;">Haute École<br />Bruxelles-Brabant</span>
            </mj-text>`
@@ -273,7 +279,7 @@ export function footerBlock(theme: EmailTheme, note: string, brand: BrandConfig 
 
     const links = [
         link(brand.siteUrl, "Site du CE"),
-        theme.url ? link(theme.url, theme.kicker ? "Le campus" : "Nos campus") : "",
+        theme.url ? link(theme.url, theme.linkLabel ?? (theme.kicker ? "Le campus" : "Nos campus")) : "",
         link(brand.instagramUrl, "Instagram"),
         link(brand.facebookUrl, "Facebook"),
         link(brand.contactUrl, "Contact"),

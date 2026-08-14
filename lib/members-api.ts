@@ -121,6 +121,65 @@ export async function getResults(subjectId: number) {
     return res.ok ? res.json() : null
 }
 
+// ── Procurations ──────────────────────────────────────────────────────────────
+
+/** Liste des membres de l'équipe — sert à désigner le mandant d'une procuration. */
+export async function getTeamMembers() {
+    const cached = fromCache<any[]>("team-members")
+    if (cached) return cached
+    const res = await fetch(`${BASE}/team-members`, { cache: "no-store" })
+    const data = res.ok ? await res.json() : []
+    toCache("team-members", data)
+    return data
+}
+
+/** Procurations d'une séance : visibles par tous les membres. */
+export async function getProxies(sessionId: number) {
+    const res = await fetch(`${BASE}/members/sessions/${sessionId}/proxies`, { cache: "no-store" })
+    return res.ok ? res.json() : []
+}
+
+/**
+ * Dépôt d'une procuration : le membre présent déclare le mandant et joint le PDF
+ * signé. Multipart — pas de `Content-Type` manuel, le navigateur gère la boundary.
+ */
+export async function createProxy(
+    sessionId: number,
+    grantorEmail: string,
+    file: File,
+    email: string,
+    name: string
+) {
+    const body = new FormData()
+    body.append("grantorEmail", grantorEmail)
+    body.append("file", file)
+
+    const res = await fetch(`${BASE}/members/sessions/${sessionId}/proxies`, {
+        method: "POST",
+        headers: { "X-Member-Email": email, "X-Member-Name": name },
+        body,
+        cache: "no-store",
+    })
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }))
+        throw new Error(err.error ?? err.message ?? `Erreur ${res.status}`)
+    }
+    return res.json()
+}
+
+/**
+ * Vérification du PDF par le président de séance : la date portée sur la
+ * procuration n'étant pas lisible automatiquement, c'est lui qui confirme
+ * qu'elle vise bien cette AG.
+ */
+export async function setProxyValidation(id: number, validated: boolean, email: string, name: string) {
+    return memberFetch(`/members/proxies/${id}/validation?validated=${validated}`, email, name, { method: "PATCH" })
+}
+
+export async function deleteProxy(id: number, email: string, name: string) {
+    return memberFetch(`/members/proxies/${id}`, email, name, { method: "DELETE" })
+}
+
 // ── Documents ─────────────────────────────────────────────────────────────────
 export async function getDocuments(params?: { type?: string; sessionId?: number }) {
     const key = `docs:${params?.type ?? ""}:${params?.sessionId ?? ""}`

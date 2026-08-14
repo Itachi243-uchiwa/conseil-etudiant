@@ -85,16 +85,18 @@ export const EMAIL_THEMES: EmailTheme[] = [
         url: `${SITE_URL}/campus`,
     },
     {
-        id: "defre",
-        mark: "defre",
-        name: "Campus Defré",
-        kicker: "Campus Defré",
-        accent: "#007933",
-        accentDeep: "#016B2E",
-        accentOnDark: "#7BD9A2",
+        // Defré et Nivelles ne forment plus qu'une entité : le département
+        // pédagogique, en rose. Pas de lettrage campus — l'en-tête écrit son nom.
+        id: "pedagogique",
+        name: "Département pédagogique",
+        kicker: "Département pédagogique",
+        accent: "#E6007D",
+        accentDeep: "#B00062",
+        accentOnDark: "#FF8FC8",
         onAccent: "#FFFFFF",
-        tint: "#EDF7F1",
-        url: `${SITE_URL}/campus/campus-defre`,
+        tint: "#FDECF5",
+        url: `${SITE_URL}/campus`,
+        linkLabel: "Le département",
     },
     {
         id: "esi",
@@ -144,22 +146,17 @@ export const EMAIL_THEMES: EmailTheme[] = [
         tint: "#F9EDED",
         url: `${SITE_URL}/campus/campus-ises`,
     },
-    {
-        id: "nivelles",
-        mark: "nivelles",
-        name: "Campus Nivelles",
-        kicker: "Campus Nivelles",
-        accent: "#E6007D",
-        accentDeep: "#B00062",
-        accentOnDark: "#FF8FC8",
-        onAccent: "#FFFFFF",
-        tint: "#FDECF5",
-        url: `${SITE_URL}/campus/campus-nivelles`,
-    },
 ]
 
 export const DEFAULT_THEME_ID = "general"
 
+/** Anciens brouillons : Defré et Nivelles ont fusionné en un seul thème. */
+const LEGACY_THEME_IDS: Record<string, string> = {
+    defre: "pedagogique",
+    nivelles: "pedagogique",
+}
+
 export function getTheme(id: string | undefined): EmailTheme {
-    return EMAIL_THEMES.find(t => t.id === id) ?? EMAIL_THEMES[0]
+    const resolved = id ? LEGACY_THEME_IDS[id] ?? id : id
+    return EMAIL_THEMES.find(t => t.id === resolved) ?? EMAIL_THEMES[0]
 }

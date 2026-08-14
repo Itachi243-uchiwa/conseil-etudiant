@@ -1,10 +1,11 @@
 "use client"
 
 import MemberShell from "@/components/membres/MemberShell"
+import AGCalendar from "@/components/membres/AGCalendar"
 import { useEffect, useState } from "react"
 import { getSessions } from "@/lib/members-api"
 import Link from "next/link"
-import { Calendar, MapPin, Clock, ChevronRight, Vote } from "lucide-react"
+import { Calendar, MapPin, Clock, ChevronRight, Vote, List, CalendarDays } from "lucide-react"
 
 const STATUS_CONFIG = {
     SCHEDULED: { label: "Planifiée", color: "bg-blue-500/15 text-blue-600 border-blue-500/30 dark:text-blue-300" },
@@ -16,6 +17,7 @@ export default function AGListPage() {
     const [sessions, setSessions] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState<string>("ALL")
+    const [view, setView] = useState<"LIST" | "CALENDAR">("LIST")
 
     useEffect(() => {
         getSessions().then(setSessions).finally(() => setLoading(false))
@@ -26,11 +28,39 @@ export default function AGListPage() {
     return (
         <MemberShell>
             <div className="space-y-6">
-                <div>
-                    <h1 className="text-2xl font-bold">Assemblées Générales</h1>
-                    <p className="text-muted-foreground mt-1">Participez aux votes et consultez les sessions passées</p>
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                        <h1 className="text-2xl font-bold">Assemblées Générales</h1>
+                        <p className="text-muted-foreground mt-1">Participez aux votes et consultez les sessions passées</p>
+                    </div>
+
+                    {/* Bascule liste / calendrier */}
+                    <div className="flex items-center gap-1 border border-border rounded-xl p-1 shrink-0">
+                        {([
+                            { key: "LIST", label: "Liste", icon: List },
+                            { key: "CALENDAR", label: "Calendrier", icon: CalendarDays },
+                        ] as const).map(({ key, label, icon: Icon }) => (
+                            <button
+                                key={key}
+                                onClick={() => setView(key)}
+                                aria-pressed={view === key}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                                    view === key
+                                        ? "bg-primary text-primary-foreground"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                }`}
+                            >
+                                <Icon className="w-3.5 h-3.5" />
+                                {label}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
+                {view === "CALENDAR" ? (
+                    <AGCalendar sessions={sessions} loading={loading} />
+                ) : (
+                <>
                 {/* Filtres */}
                 <div className="flex gap-2 flex-wrap">
                     {[["ALL", "Toutes"], ["SCHEDULED", "Planifiées"], ["IN_PROGRESS", "En cours"], ["CLOSED", "Terminées"]].map(([val, label]) => (
@@ -127,6 +157,8 @@ export default function AGListPage() {
                             )
                         })}
                     </div>
+                )}
+                </>
                 )}
             </div>
         </MemberShell>

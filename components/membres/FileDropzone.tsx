@@ -11,29 +11,37 @@ export const ACCEPTED_EXTENSIONS = [
     "txt", "md", "csv", "png", "jpg", "jpeg", "webp",
 ]
 
-const ACCEPT_ATTR = ACCEPTED_EXTENSIONS.map(e => `.${e}`).join(",")
+const DEFAULT_HINT = "PDF, Word, Excel, PowerPoint, image — 15 Mo maximum"
 
 /**
  * Zone de dépôt d'un fichier unique (clic ou glisser-déposer).
  * Valide extension et taille côté client ; le backend revalide de toute façon.
+ *
+ * `extensions` permet de restreindre le dépôt (ex. procuration : PDF uniquement).
  */
 export default function FileDropzone({
     file,
     onChange,
     disabled,
+    extensions = ACCEPTED_EXTENSIONS,
+    hint = DEFAULT_HINT,
 }: {
     file: File | null
     onChange: (file: File | null) => void
     disabled?: boolean
+    extensions?: string[]
+    hint?: string
 }) {
     const [error, setError] = useState<string | null>(null)
     const [dragging, setDragging] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const acceptAttr = extensions.map(e => `.${e}`).join(",")
+
     const pick = (candidate: File | undefined | null) => {
         if (!candidate) return
         const ext = candidate.name.split(".").pop()?.toLowerCase() ?? ""
-        if (!ACCEPTED_EXTENSIONS.includes(ext)) {
+        if (!extensions.includes(ext)) {
             setError(`Format .${ext} non accepté`)
             onChange(null)
             return
@@ -94,14 +102,14 @@ export default function FileDropzone({
                 >
                     <Upload className="w-6 h-6 text-muted-foreground" />
                     <p className="text-sm font-medium">Glissez votre fichier ici ou cliquez pour parcourir</p>
-                    <p className="text-xs text-muted-foreground">PDF, Word, Excel, PowerPoint, image — 15 Mo maximum</p>
+                    <p className="text-xs text-muted-foreground">{hint}</p>
                 </div>
             )}
 
             <input
                 ref={inputRef}
                 type="file"
-                accept={ACCEPT_ATTR}
+                accept={acceptAttr}
                 className="hidden"
                 disabled={disabled}
                 onChange={e => pick(e.target.files?.[0])}
