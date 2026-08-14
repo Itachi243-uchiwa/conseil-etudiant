@@ -103,10 +103,16 @@ export async function closeVote(subjectId: number, email: string, name: string) 
     return memberFetch(`/members/subjects/${subjectId}/close`, email, name, { method: "PATCH" })
 }
 
-export async function castVote(subjectId: number, choice: string, email: string, name: string) {
+/** Motion binaire : `choice` = POUR | CONTRE | ABSTENTION. Scrutin : `optionId`. */
+export async function castVote(
+    subjectId: number,
+    ballot: { choice?: string; optionId?: number },
+    email: string,
+    name: string
+) {
     return memberFetch(`/members/subjects/${subjectId}/vote`, email, name, {
         method: "POST",
-        body: JSON.stringify({ choice }),
+        body: JSON.stringify(ballot),
     })
 }
 
@@ -146,4 +152,46 @@ export async function getMyDocuments(email: string, name: string) {
     const data = await memberFetch<any[]>("/members/documents/my", email, name)
     toCache(key, data)
     return data
+}
+
+/**
+ * Dépôt d'un document avec le fichier joint. Passe en multipart pour que le
+ * backend téléverse le fichier lui-même — pas de `Content-Type` manuel, le
+ * navigateur doit générer la boundary.
+ */
+export async function uploadDocument(
+    fields: { title: string; description?: string; type?: string; sessionId?: number; fileUrl?: string },
+    file: File | null,
+    email: string,
+    name: string
+) {
+    const body = new FormData()
+    body.append("title", fields.title)
+    body.append("type", fields.type ?? "RAPPORT")
+    if (fields.description) body.append("description", fields.description)
+    if (fields.sessionId) body.append("sessionId", String(fields.sessionId))
+    if (fields.fileUrl) body.append("fileUrl", fields.fileUrl)
+    if (file) body.append("file", file)
+
+    const res = await fetch(`${BASE}/members/documents`, {
+        method: "POST",
+        headers: { "X-Member-Email": email, "X-Member-Name": name },
+        body,
+        cache: "no-store",
+    })
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }))
+        throw new Error(err.error ?? err.message ?? `Erreur ${res.status}`)
+    }
+    bustPrefix("docs:")
+    bustPrefix("my-docs:")
+    return res.json()
+}
+
+/** Supprime un document dont le membre est l'auteur. */
+export async function deleteMyDocument(id: number, email: string, name: string) {
+    const result = await memberFetch(`/members/documents/my/${id}`, email, name, { method: "DELETE" })
+    bustPrefix("docs:")
+    bustPrefix("my-docs:")
+    return result
 }

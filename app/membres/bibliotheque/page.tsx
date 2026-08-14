@@ -2,8 +2,11 @@
 
 import MemberShell from "@/components/membres/MemberShell"
 import { useEffect, useState } from "react"
-import { getDocuments } from "@/lib/members-api"
-import { FileText, Download, Calendar, User, Filter } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { getDocuments, deleteMyDocument } from "@/lib/members-api"
+import { formatFileSize } from "@/lib/utils"
+import { FileText, Download, Calendar, User, Filter, Paperclip, Link2, Trash2 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 const DOC_TYPES = [
     { key: "", label: "Tous" },
@@ -23,24 +26,50 @@ const TYPE_ICONS: Record<string, string> = {
 }
 
 export default function BibliothequePage() {
+    const { data: session } = useSession()
+    const { toast } = useToast()
     const [allDocs, setAllDocs] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [activeType, setActiveType] = useState("")
     const [search, setSearch] = useState("")
+    const [onlyMine, setOnlyMine] = useState(false)
+    const [deletingId, setDeletingId] = useState<number | null>(null)
+
+    const user = session?.user
+    const myEmail = user?.email?.toLowerCase() ?? ""
 
     // Fetch ALL docs once — filter/search happen client-side instantly
     useEffect(() => {
         getDocuments().then(setAllDocs).finally(() => setLoading(false))
     }, [])
 
+    const isMine = (doc: any) => !!myEmail && doc.authorEmail?.toLowerCase() === myEmail
+    const mineCount = allDocs.filter(isMine).length
+
     const filtered = allDocs.filter((d: any) => {
         const matchType = !activeType || d.type === activeType
         const q = search.toLowerCase()
         const matchSearch = !q ||
             d.title?.toLowerCase().includes(q) ||
-            d.authorName?.toLowerCase().includes(q)
-        return matchType && matchSearch
+            d.authorName?.toLowerCase().includes(q) ||
+            d.fileName?.toLowerCase().includes(q)
+        return matchType && matchSearch && (!onlyMine || isMine(d))
     })
+
+    const handleDelete = async (doc: any) => {
+        if (!user) return
+        if (!confirm(`Supprimer définitivement « ${doc.title} » ?`)) return
+        setDeletingId(doc.id)
+        try {
+            await deleteMyDocument(doc.id, user.email ?? "", user.memberName ?? "")
+            setAllDocs(docs => docs.filter(d => d.id !== doc.id))
+            toast({ title: "Document supprimé", description: doc.title })
+        } catch (e: any) {
+            toast({ title: "Erreur", description: e.message, variant: "destructive" })
+        } finally {
+            setDeletingId(null)
+        }
+    }
 
     return (
         <MemberShell>
@@ -75,6 +104,18 @@ export default function BibliothequePage() {
                                 {key && TYPE_ICONS[key]} {label}
                             </button>
                         ))}
+                        {mineCount > 0 && (
+                            <button
+                                onClick={() => setOnlyMine(v => !v)}
+                                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                                    onlyMine
+                                        ? "bg-primary border-primary text-primary-foreground"
+                                        : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
+                                }`}
+                            >
+                                Mes dépôts ({mineCount})
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -100,42 +141,66 @@ export default function BibliothequePage() {
                     </div>
                 ) : (
                     <div className="space-y-2">
-                        {filtered.map((doc: any) => (
-                            <div key={doc.id} className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:bg-muted/50 transition-all">
-                                <div className="text-2xl shrink-0">{TYPE_ICONS[doc.type] ?? "📄"}</div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-start justify-between gap-4">
-                                        <div>
-                                            <p className="font-medium truncate">{doc.title}</p>
-                                            {doc.description && <p className="text-muted-foreground text-sm mt-0.5 line-clamp-1">{doc.description}</p>}
+                        {filtered.map((doc: any) => {
+                            const size = formatFileSize(doc.fileSize)
+                            const hosted = !!doc.fileName
+                            return (
+                                <div key={doc.id} className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:bg-muted/50 transition-all">
+                                    <div className="text-2xl shrink-0">{TYPE_ICONS[doc.type] ?? "📄"}</div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="min-w-0">
+                                                <p className="font-medium truncate">{doc.title}</p>
+                                                {doc.description && <p className="text-muted-foreground text-sm mt-0.5 line-clamp-1">{doc.description}</p>}
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <span className="text-xs text-muted-foreground border border-border rounded-full px-2 py-0.5 hidden sm:inline">
+                                                    {doc.type.replace(/_/g, " ")}
+                                                </span>
+                                                {doc.fileUrl && (
+                                                    <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-all">
+                                                        {hosted ? <Download className="w-3 h-3" /> : <Link2 className="w-3 h-3" />}
+                                                        {hosted ? "Télécharger" : "Ouvrir le lien"}
+                                                    </a>
+                                                )}
+                                                {isMine(doc) && (
+                                                    <button
+                                                        onClick={() => handleDelete(doc)}
+                                                        disabled={deletingId === doc.id}
+                                                        title="Supprimer ce document"
+                                                        className="p-1.5 rounded-lg text-muted-foreground hover:text-red-600 hover:bg-red-500/10 disabled:opacity-50 transition-all"
+                                                    >
+                                                        {deletingId === doc.id
+                                                            ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                            : <Trash2 className="w-4 h-4" />}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2 shrink-0">
-                                            <span className="text-xs text-muted-foreground border border-border rounded-full px-2 py-0.5">
-                                                {doc.type.replace(/_/g, " ")}
-                                            </span>
-                                            {doc.fileUrl && (
-                                                <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer"
-                                                    className="flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-all">
-                                                    <Download className="w-3 h-3" />Télécharger
-                                                </a>
+                                        <div className="flex items-center gap-3 mt-2 text-muted-foreground text-xs flex-wrap">
+                                            {doc.authorName && (
+                                                <span className="flex items-center gap-1"><User className="w-3 h-3" />{doc.authorName}</span>
+                                            )}
+                                            {doc.sessionTitle && <span className="text-primary/70">{doc.sessionTitle}</span>}
+                                            {doc.createdAt && (
+                                                <span className="flex items-center gap-1">
+                                                    <Calendar className="w-3 h-3" />
+                                                    {new Date(doc.createdAt).toLocaleDateString("fr-FR")}
+                                                </span>
+                                            )}
+                                            {hosted && (
+                                                <span className="flex items-center gap-1 min-w-0">
+                                                    <Paperclip className="w-3 h-3 shrink-0" />
+                                                    <span className="truncate max-w-[220px]">{doc.fileName}</span>
+                                                    {size && <span className="opacity-70 shrink-0">· {size}</span>}
+                                                </span>
                                             )}
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-3 mt-2 text-muted-foreground text-xs">
-                                        {doc.authorName && (
-                                            <span className="flex items-center gap-1"><User className="w-3 h-3" />{doc.authorName}</span>
-                                        )}
-                                        {doc.sessionTitle && <span className="text-primary/70">{doc.sessionTitle}</span>}
-                                        {doc.createdAt && (
-                                            <span className="flex items-center gap-1">
-                                                <Calendar className="w-3 h-3" />
-                                                {new Date(doc.createdAt).toLocaleDateString("fr-FR")}
-                                            </span>
-                                        )}
-                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 )}
             </div>
