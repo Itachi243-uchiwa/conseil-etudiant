@@ -44,9 +44,7 @@ export default function DocumentUploadForm({
 
     // Séances que le membre préside : seules celles-ci acceptent une pièce officielle
     const presidedSessions = useMemo(
-        () => sessions.filter((s: any) =>
-            (s.presidentEmails ?? []).some((e: string) => e.toLowerCase() === myEmail)
-        ),
+        () => sessions.filter((s: any) => s.presidentEmail?.toLowerCase() === myEmail),
         [sessions, myEmail]
     )
 

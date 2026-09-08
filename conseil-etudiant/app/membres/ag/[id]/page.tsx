@@ -4,6 +4,7 @@ import { use, useEffect, useState, useRef, useCallback, type ReactElement } from
 import { useSession } from "next-auth/react"
 import MemberShell from "@/components/membres/MemberShell"
 import SessionDocuments from "@/components/membres/SessionDocuments"
+import SessionAgenda from "@/components/membres/SessionAgenda"
 import ProxyPanel from "@/components/membres/ProxyPanel"
 import { getSession, getSubjects, getProxies, castVote, openVote, closeVote, createSubject } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
@@ -61,13 +62,12 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
     const sseRefs = useRef<Record<number, EventSource>>({})
 
     const user = session?.user
-    // Une séance peut être coprésidée : le backend renvoie la liste découpée.
-    const isPresident = !!(
-        user?.email &&
-        (agSession?.presidentEmails ?? []).some(
-            (e: string) => e.toLowerCase() === user.email!.toLowerCase()
-        )
-    )
+
+    // Le bureau dispose des mêmes accès que le président de séance : c'est lui
+    // qui porte la responsabilité des AG. Le backend applique la même règle,
+    // ce booléen ne fait que refléter l'interface.
+    const isSessionPresident = !!(user?.email && agSession?.presidentEmail?.toLowerCase() === user.email.toLowerCase())
+    const isPresident = isSessionPresident || !!user?.officeMember
 
     // Procuration portée par le membre connecté : sa voix vaut alors double.
     const myProxy = proxies.find(
@@ -252,11 +252,18 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
                         {isPresident && (
                             <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary text-xs px-3 py-1.5 rounded-full shrink-0">
                                 <Users className="w-3.5 h-3.5" />
-                                Président de séance
+                                {isSessionPresident ? "Président de séance" : "Bureau"}
                             </div>
                         )}
                     </div>
                 </div>
+
+                {/* Ordre du jour */}
+                <SessionAgenda
+                    sessionId={Number(id)}
+                    pdfDocumentId={agSession?.agendaPdfDocumentId}
+                    canChair={isPresident}
+                />
 
                 {/* Sujets de vote */}
                 <div className="space-y-3">

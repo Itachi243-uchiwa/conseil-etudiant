@@ -1,0 +1,36 @@
+/* Campus logo background colors */
+.campus-logo {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.campus-logo.defre {
+    background-color: #007933;
+}
+
+.campus-logo.esi {
+    background-color: #20CAD2;
+}
+
+.campus-logo.nivelles {
+    background-color: #E6007D;
+}
+
+.campus-logo.isib {
+    background-color: #00BFA2;
+}
+
+.campus-logo.ises {
+    background-color: #7E1817;
+}
+
+.campus-logo.isek {
+    background-color: #99d218;
+}
+
+.campus-logo.iessid {
+    background-color: #D98B43;
+}

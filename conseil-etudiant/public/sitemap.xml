@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                           http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+                           http://www.google.com/schemas/sitemap-image/1.1
+                           http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd
+                           http://www.google.com/schemas/sitemap-news/0.9
+                           http://www.google.com/schemas/sitemap-news/0.9/sitemap-news.xsd">
+
+    <!-- Page d'accueil principale -->
+    <url>
+        <loc>https://cehe2b.be/</loc>
+        <lastmod>2025-08-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Section actualités -->
+    <url>
+        <loc>https://cehe2b.be/news</loc>
+        <lastmod>2025-08-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/about</loc>
+        <lastmod>2025-08-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/elections</loc>
+        <lastmod>2025-08-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/cooptation</loc>
+        <lastmod>2025-08-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/services</loc>
+        <lastmod>2025-08-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/events</loc>
+        <lastmod>2025-08-16</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/join</loc>
+        <lastmod>2025-08-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/campus</loc>
+        <lastmod>2025-08-15</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/vlog</loc>
+        <lastmod>2025-08-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/legal</loc>
+        <lastmod>2025-08-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    <!-- Pages de contact et légales -->
+    <url>
+        <loc>https://cehe2b.be/contact</loc>
+        <lastmod>2025-08-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/privacy</loc>
+        <lastmod>2025-07-01</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/cookies</loc>
+        <lastmod>2025-07-01</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/terms</loc>
+        <lastmod>2025-08-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <url>
+        <loc>https://cehe2b.be/faq</loc>
+        <lastmod>2025-08-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+
+</urlset>

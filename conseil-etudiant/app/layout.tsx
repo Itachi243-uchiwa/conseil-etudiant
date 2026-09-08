@@ -1,0 +1,43 @@
+import type React from "react"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
+import CookieConsent from "@/components/ui/cookie-consent"
+import { Inter } from 'next/font/google'
+import "./globals.css"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata = {
+    title: "Conseil Étudiant HE2B",
+    description: "Site officiel du Conseil Étudiant HE2B",
+    generator: 'Martinez Muzela',
+    // Sans metadataBase, les images Open Graph partent en URL relative et ne
+    // sont pas résolues par les moteurs de recherche ni par les réseaux sociaux.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.cehe2b.be"),
+    // app/icon.png, app/apple-icon.png et app/favicon.ico sont détectés
+    // automatiquement par le App Router : les balises <link> sont générées.
+}
+
+export default function RootLayout({
+                                       children,
+                                   }: {
+    children: React.ReactNode
+}) {
+    return (
+        <html lang="fr" suppressHydrationWarning className="light">
+        <body className={`${inter.className} min-h-screen w-screen bg-background antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+            <div className="relative flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1 w-screen">{children}</main>
+                <Footer />
+            </div>
+            <Toaster />
+            <CookieConsent />
+        </ThemeProvider>
+        </body>
+        </html>
+    )
+}
