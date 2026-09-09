@@ -12,7 +12,10 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
     title: "Conseil Étudiant HE2B",
     description: "Site officiel du Conseil Étudiant HE2B",
-    generator: 'Martinez Muzela'
+    generator: 'Martinez Muzela',
+    // app/icon.png, app/apple-icon.png et app/favicon.ico sont détectés
+    // automatiquement par l'App Router : les balises <link> sont générées.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.cehe2b.be"),
 }
 
 export default function RootLayout({

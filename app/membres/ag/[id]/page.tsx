@@ -4,6 +4,7 @@ import { use, useEffect, useState, useRef, useCallback, type ReactElement } from
 import { useSession } from "next-auth/react"
 import MemberShell from "@/components/membres/MemberShell"
 import SessionDocuments from "@/components/membres/SessionDocuments"
+import SessionAgenda from "@/components/membres/SessionAgenda"
 import ProxyPanel from "@/components/membres/ProxyPanel"
 import { getSession, getSubjects, getProxies, castVote, openVote, closeVote, createSubject } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
@@ -257,6 +258,9 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
                         )}
                     </div>
                 </div>
+
+                {/* Ordre du jour */}
+                <SessionAgenda items={agSession?.agendaItems} />
 
                 {/* Sujets de vote */}
                 <div className="space-y-3">

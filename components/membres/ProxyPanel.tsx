@@ -42,6 +42,8 @@ export default function ProxyPanel({
     const [showForm, setShowForm] = useState(false)
     const [members, setMembers] = useState<any[]>([])
     const [grantorEmail, setGrantorEmail] = useState("")
+    /** Vide = la procuration est portée par la personne connectée. */
+    const [holderEmail, setHolderEmail] = useState("")
     const [file, setFile] = useState<File | null>(null)
     const [submitting, setSubmitting] = useState(false)
     const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -53,16 +55,35 @@ export default function ProxyPanel({
 
     const myProxy = proxies.find(p => p.holderEmail?.toLowerCase() === myEmail) ?? null
     const iGaveProxy = proxies.find(p => p.grantorEmail?.toLowerCase() === myEmail) ?? null
-    const canDeclare = !closed && !myProxy && !iGaveProxy
+    // Un membre ne déclare que la procuration qu'il porte, une seule fois. Le ou la
+    // président·e de séance encode en plus pour les autres : il ou elle ne devient
+    // pas porteur, il ou elle saisit à la place du mandataire désigné.
+    const canDeclare = !closed && ((!myProxy && !iGaveProxy) || isPresident)
 
     // Les membres déjà engagés (d'un côté ou de l'autre) ne sont plus proposés :
     // une seule procuration par personne.
     const taken = new Set(
         proxies.flatMap(p => [p.grantorEmail?.toLowerCase(), p.holderEmail?.toLowerCase()]).filter(Boolean)
     )
-    const selectable = members.filter(
-        (m: any) => m.email && m.email.toLowerCase() !== myEmail && !taken.has(m.email.toLowerCase())
+
+    /** Mandataire réellement désigné : soi-même par défaut. */
+    const effectiveHolder = holderEmail || myEmail
+
+    const holderCandidates = members.filter(
+        (m: any) => m.email && !taken.has(m.email.toLowerCase())
     )
+
+    const selectable = members.filter(
+        (m: any) => m.email
+            && m.email.toLowerCase() !== effectiveHolder.toLowerCase()
+            && !taken.has(m.email.toLowerCase())
+    )
+
+    useEffect(() => {
+        if (grantorEmail && grantorEmail.toLowerCase() === effectiveHolder.toLowerCase()) {
+            setGrantorEmail("")
+        }
+    }, [effectiveHolder, grantorEmail])
 
     useEffect(() => {
         if (showForm && members.length === 0) {
@@ -74,12 +95,22 @@ export default function ProxyPanel({
         if (!user || !grantorEmail || !file || submitting) return
         setSubmitting(true)
         try {
-            await createProxy(sessionId, grantorEmail, file, user.email ?? "", user.memberName ?? "")
+            await createProxy(
+                sessionId, grantorEmail, file,
+                user.email ?? "", user.memberName ?? "",
+                holderEmail || undefined,
+            )
             await onReload()
             setShowForm(false)
             setGrantorEmail("")
+            setHolderEmail("")
             setFile(null)
-            toast({ title: "Procuration enregistrée", description: "Votre vote comptera pour deux voix." })
+            toast({
+                title: "Procuration enregistrée",
+                description: holderEmail
+                    ? "Le mandataire désigné votera pour deux voix."
+                    : "Votre vote comptera pour deux voix.",
+            })
         } catch (e: any) {
             toast({ title: "Erreur", description: e.message, variant: "destructive" })
         } finally {
@@ -164,6 +195,33 @@ export default function ProxyPanel({
                             Déposez-la avant l'ouverture des votes : elle ne s'applique qu'aux votes à venir.
                         </p>
                     </div>
+
+                    {isPresident && (
+                        <div className="space-y-1.5">
+                            <label className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                                Membre présent qui portera la procuration
+                            </label>
+                            <select
+                                value={holderEmail}
+                                onChange={e => setHolderEmail(e.target.value)}
+                                disabled={submitting}
+                                className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary"
+                            >
+                                <option value="">Moi ({user?.memberName ?? myEmail})</option>
+                                {holderCandidates
+                                    .filter((m: any) => m.email.toLowerCase() !== myEmail)
+                                    .map((m: any) => (
+                                        <option key={m.email} value={m.email}>
+                                            {m.name}{m.campus?.name ? ` — ${m.campus.name}` : ""}
+                                        </option>
+                                    ))}
+                            </select>
+                            <p className="text-xs text-muted-foreground">
+                                Encoder pour quelqu'un d'autre ne vous donne pas sa voix : c'est le
+                                mandataire choisi ici qui votera pour l'absent.
+                            </p>
+                        </div>
+                    )}
 
                     <div className="space-y-1.5">
                         <label className="text-xs text-muted-foreground font-medium uppercase tracking-wide">

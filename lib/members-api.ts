@@ -148,10 +148,17 @@ export async function createProxy(
     grantorEmail: string,
     file: File,
     email: string,
-    name: string
+    name: string,
+    /**
+     * Mandataire désigné sur le PDF quand ce n'est pas la personne connectée.
+     * Réservé aux président·e·s de séance, ce que le backend vérifie. Le porteur
+     * reste celui-ci, jamais l'encodeur.
+     */
+    holderEmail?: string
 ) {
     const body = new FormData()
     body.append("grantorEmail", grantorEmail)
+    if (holderEmail) body.append("holderEmail", holderEmail)
     body.append("file", file)
 
     const res = await fetch(`${BASE}/members/sessions/${sessionId}/proxies`, {
