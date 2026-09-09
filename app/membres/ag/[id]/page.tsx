@@ -373,7 +373,6 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
                 {/* Procurations des membres absents */}
                 <ProxyPanel
                     sessionId={Number(id)}
-                    sessionDate={agSession?.sessionDate}
                     proxies={proxies}
                     loading={proxiesLoading}
                     isPresident={isPresident}

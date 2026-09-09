@@ -4,11 +4,9 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { createProxy, deleteProxy, getTeamMembers, setProxyValidation } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
-import FileDropzone from "./FileDropzone"
-import PdfPreview from "./PdfPreview"
 import {
-    UserCheck, Plus, Trash2, FileText, Info, Eye, EyeOff, ExternalLink,
-    ShieldCheck, ShieldAlert, CalendarCheck,
+    UserCheck, Plus, Trash2, Info,
+    ShieldCheck, ShieldAlert,
 } from "lucide-react"
 
 /**
@@ -25,7 +23,6 @@ import {
  */
 export default function ProxyPanel({
     sessionId,
-    sessionDate,
     proxies,
     loading,
     isPresident,
@@ -33,8 +30,6 @@ export default function ProxyPanel({
     onReload,
 }: {
     sessionId: number
-    /** Date de l'AG (`yyyy-MM-dd`), rappelée à côté de l'aperçu pour la comparaison. */
-    sessionDate?: string
     proxies: any[]
     loading: boolean
     isPresident: boolean
@@ -49,10 +44,8 @@ export default function ProxyPanel({
     const [grantorEmail, setGrantorEmail] = useState("")
     /** Vide = la procuration est portée par la personne connectée. */
     const [holderEmail, setHolderEmail] = useState("")
-    const [file, setFile] = useState<File | null>(null)
     const [submitting, setSubmitting] = useState(false)
     const [deletingId, setDeletingId] = useState<number | null>(null)
-    const [previewId, setPreviewId] = useState<number | null>(null)
     const [validatingId, setValidatingId] = useState<number | null>(null)
 
     const user = session?.user
@@ -101,7 +94,7 @@ export default function ProxyPanel({
         setSubmitting(true)
         try {
             await createProxy(
-                sessionId, grantorEmail, file,
+                sessionId, grantorEmail,
                 user.email ?? "", user.memberName ?? "",
                 holderEmail || undefined,
             )
@@ -109,7 +102,6 @@ export default function ProxyPanel({
             setShowForm(false)
             setGrantorEmail("")
             setHolderEmail("")
-            setFile(null)
             toast({
                 title: "Procuration enregistrée",
                 description: holderEmail
@@ -196,9 +188,8 @@ export default function ProxyPanel({
                     <div>
                         <h3 className="font-medium text-sm">Nouvelle procuration</h3>
                         <p className="text-xs text-muted-foreground mt-1">
-                            Désignez le membre absent qui confie sa voix. Le PDF signé est facultatif :
-                            joignez-le si vous l'avez. Encodez avant l'ouverture des votes, une procuration
-                            ne s'applique qu'aux scrutins à venir.
+                            Désignez le membre absent qui confie sa voix. Encodez avant l'ouverture
+                            des votes : une procuration ne s'applique qu'aux scrutins à venir.
                         </p>
                     </div>
 
@@ -253,20 +244,6 @@ export default function ProxyPanel({
                         )}
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                            Procuration signée (PDF) — facultatif
-                        </label>
-                        <FileDropzone
-                            file={file}
-                            onChange={setFile}
-                            disabled={submitting}
-                            extensions={["pdf"]}
-                            hint="PDF uniquement — 15 Mo maximum"
-                        />
-                        {/* Aperçu avant envoi : on vérifie le document déposé, dates comprises. */}
-                        {file && <PdfPreview file={file} height={360} />}
-                    </div>
 
                     <div className="flex gap-2">
                         <button
@@ -299,7 +276,6 @@ export default function ProxyPanel({
                 <div className="space-y-2">
                     {proxies.map((p: any) => {
                         const mine = p.holderEmail?.toLowerCase() === myEmail
-                        const previewing = previewId === p.id
                         return (
                             <div key={p.id} className="bg-card border border-border rounded-xl overflow-hidden">
                             <div
@@ -335,16 +311,6 @@ export default function ProxyPanel({
                                         )}
                                     </div>
                                 </div>
-                                {p.fileUrl && (
-                                    <button
-                                        onClick={() => setPreviewId(previewing ? null : p.id)}
-                                        aria-expanded={previewing}
-                                        className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors"
-                                    >
-                                        {previewing ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                                        {previewing ? "Masquer" : "Aperçu"}
-                                    </button>
-                                )}
                                 {(mine || isPresident) && (
                                     <button
                                         onClick={() => remove(p)}
@@ -357,61 +323,20 @@ export default function ProxyPanel({
                                 )}
                             </div>
 
-                            {previewing && p.fileUrl && (
-                                <div className="px-4 pb-4 space-y-2 border-t border-border pt-3">
-                                    <div className="flex items-center justify-between gap-3 flex-wrap">
-                                        <p className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
-                                            <FileText className="w-3.5 h-3.5 shrink-0" />
-                                            <span className="truncate">{p.fileName ?? "procuration.pdf"}</span>
-                                            {p.createdAt && (
-                                                <span className="shrink-0">
-                                                    · déposée le {new Date(p.createdAt).toLocaleDateString("fr-FR", {
-                                                        day: "numeric", month: "long", year: "numeric",
-                                                    })}
-                                                </span>
-                                            )}
-                                        </p>
-                                        <a
-                                            href={p.fileUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline shrink-0"
-                                        >
-                                            <ExternalLink className="w-3.5 h-3.5" />
-                                            Ouvrir dans un onglet
-                                        </a>
-                                    </div>
-                                    {sessionDate && (
-                                        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                            <CalendarCheck className="w-3.5 h-3.5 shrink-0" />
-                                            Cette AG a lieu le{" "}
-                                            <strong className="text-foreground">
-                                                {new Date(`${sessionDate}T12:00:00`).toLocaleDateString("fr-FR", {
-                                                    day: "numeric", month: "long", year: "numeric",
-                                                })}
-                                            </strong>
-                                            — la date portée sur la procuration doit correspondre.
-                                        </p>
-                                    )}
-
-                                    <PdfPreview url={p.fileUrl} />
-
-                                    {isPresident && (
-                                        <button
-                                            onClick={() => toggleValidation(p)}
-                                            disabled={validatingId === p.id}
-                                            className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all active:scale-95 disabled:opacity-50 ${
-                                                p.validatedAt
-                                                    ? "border-border text-muted-foreground hover:text-foreground hover:bg-muted"
-                                                    : "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300 hover:bg-green-500/20"
-                                            }`}
-                                        >
-                                            {p.validatedAt ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
-                                            {p.validatedAt
-                                                ? "Retirer la vérification"
-                                                : "La date correspond — marquer comme vérifiée"}
-                                        </button>
-                                    )}
+                            {isPresident && (
+                                <div className="px-4 pb-4 border-t border-border pt-3">
+                                    <button
+                                        onClick={() => toggleValidation(p)}
+                                        disabled={validatingId === p.id}
+                                        className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all active:scale-95 disabled:opacity-50 ${
+                                            p.validatedAt
+                                                ? "border-border text-muted-foreground hover:text-foreground hover:bg-muted"
+                                                : "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300 hover:bg-green-500/20"
+                                        }`}
+                                    >
+                                        {p.validatedAt ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
+                                        {p.validatedAt ? "Retirer la vérification" : "Marquer comme vérifiée"}
+                                    </button>
                                 </div>
                             )}
                             </div>

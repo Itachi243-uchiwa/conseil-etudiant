@@ -151,22 +151,6 @@ export async function deleteVoteSubject(subjectId: number, email: string, name: 
     return memberFetch(`/members/subjects/${subjectId}`, email, name, { method: "DELETE" })
 }
 
-// ── Fichiers ──────────────────────────────────────────────────────────────────
-
-/**
- * Cloudinary sert les documents sous leur identifiant technique et avec un type
- * MIME générique : le navigateur télécharge un fichier au nom illisible et refuse
- * de l'afficher. Le backend expose un relais qui rétablit le vrai nom et le bon
- * type, y compris pour les fichiers déposés avant la correction.
- */
-export function documentFileUrl(documentId: number, download = false) {
-    return `${BASE}/members/documents/${documentId}/file?download=${download}`
-}
-
-export function proxyFileUrl(proxyId: number, download = false) {
-    return `${BASE}/members/proxies/${proxyId}/file?download=${download}`
-}
-
 // ── Procurations ──────────────────────────────────────────────────────────────
 
 /** Liste des membres de l'équipe — sert à désigner le mandant d'une procuration. */
@@ -192,7 +176,6 @@ export async function getProxies(sessionId: number) {
 export async function createProxy(
     sessionId: number,
     grantorEmail: string,
-    file: File,
     email: string,
     name: string,
     /**
@@ -202,10 +185,10 @@ export async function createProxy(
      */
     holderEmail?: string
 ) {
+    // Plus de pièce jointe : les documents du CE vivent sur son Drive.
     const body = new FormData()
     body.append("grantorEmail", grantorEmail)
     if (holderEmail) body.append("holderEmail", holderEmail)
-    body.append("file", file)
 
     const res = await fetch(`${BASE}/members/sessions/${sessionId}/proxies`, {
         method: "POST",
