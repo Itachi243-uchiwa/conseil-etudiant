@@ -1,7 +1,10 @@
 "use client"
 
-import { FileText, Download, Calendar, Paperclip, Link2, Trash2 } from "lucide-react"
+import { useState } from "react"
+import { FileText, Download, Calendar, Paperclip, Link2, Trash2, Eye, EyeOff } from "lucide-react"
 import { formatFileSize } from "@/lib/utils"
+import { documentFileUrl } from "@/lib/members-api"
+import PdfPreview from "./PdfPreview"
 
 /** Ligne de document réutilisée par les rapports et le détail d'une AG. */
 export default function DocumentRow({
@@ -15,11 +18,20 @@ export default function DocumentRow({
     deleting?: boolean
     showType?: boolean
 }) {
+    const [preview, setPreview] = useState(false)
+
     const size = formatFileSize(doc.fileSize)
     const hosted = !!doc.fileName
 
+    // Un document déposé passe par le relais du backend, qui rétablit le vrai nom
+    // et le bon type MIME. Un simple lien collé reste ouvert tel quel.
+    const openUrl = hosted ? documentFileUrl(doc.id, false) : doc.fileUrl
+    const downloadUrl = hosted ? documentFileUrl(doc.id, true) : doc.fileUrl
+    const isPdf = hosted && /\.pdf$/i.test(doc.fileName ?? "")
+
     return (
-        <div className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:bg-muted/50 transition-all">
+        <div className="bg-card border border-border rounded-xl overflow-hidden transition-all">
+        <div className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-all">
             <FileText className="w-4 h-4 text-primary shrink-0" />
 
             <div className="flex-1 min-w-0">
@@ -53,9 +65,18 @@ export default function DocumentRow({
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
+                {isPdf && (
+                    <button
+                        onClick={() => setPreview(v => !v)}
+                        className="flex items-center gap-1 text-primary text-xs hover:underline px-2 py-1"
+                    >
+                        {preview ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                        {preview ? "Masquer" : "Aperçu"}
+                    </button>
+                )}
                 {doc.fileUrl && (
                     <a
-                        href={doc.fileUrl}
+                        href={downloadUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1 text-primary text-xs hover:underline px-2 py-1"
@@ -77,6 +98,13 @@ export default function DocumentRow({
                     </button>
                 )}
             </div>
+        </div>
+
+        {preview && isPdf && (
+            <div className="px-4 pb-4">
+                <PdfPreview url={openUrl} height={480} />
+            </div>
+        )}
         </div>
     )
 }

@@ -6,7 +6,7 @@ import MemberShell from "@/components/membres/MemberShell"
 import SessionDocuments from "@/components/membres/SessionDocuments"
 import SessionAgenda from "@/components/membres/SessionAgenda"
 import ProxyPanel from "@/components/membres/ProxyPanel"
-import { getSession, getSubjects, getProxies, castVote, openVote, closeVote, createSubject } from "@/lib/members-api"
+import { getSession, getSubjects, getProxies, castVote, openVote, closeVote, createSubject, deleteVoteSubject } from "@/lib/members-api"
 import { useToast } from "@/hooks/use-toast"
 import {
     ThumbsUp, ThumbsDown, Minus, Plus, Play, Square, BarChart3, CheckCircle2,
@@ -77,6 +77,19 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
 
     const refreshSubjects = useCallback(async () => {
         const subs = await getSubjects(Number(id), user?.email ?? "", user?.memberName ?? "")
+        setSubjects(Array.isArray(subs) ? subs : [])
+    }, [id, user])
+
+    /**
+     * L'ordre du jour est porté par la séance : modifier un point ou rattacher un
+     * scrutin oblige à recharger les deux, sinon le regroupement se désynchronise.
+     */
+    const refreshAll = useCallback(async () => {
+        const [sess, subs] = await Promise.all([
+            getSession(Number(id)),
+            getSubjects(Number(id), user?.email ?? "", user?.memberName ?? ""),
+        ])
+        setAgSession(sess)
         setSubjects(Array.isArray(subs) ? subs : [])
     }, [id, user])
 
@@ -186,6 +199,21 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
         }
     }
 
+    const handleDeleteSubject = async (subjectId: number) => {
+        if (!user) return
+        if (!confirm(
+            "Supprimer ce scrutin ?\n\nLes bulletins déjà déposés et les résultats seront " +
+            "définitivement perdus. Cette action est irréversible."
+        )) return
+        try {
+            await deleteVoteSubject(subjectId, user.email ?? "", user.memberName ?? "")
+            await refreshSubjects()
+            toast({ title: "Scrutin supprimé" })
+        } catch (e: any) {
+            toast({ title: "Erreur", description: e.message, variant: "destructive" })
+        }
+    }
+
     const handleClose = async (subjectId: number) => {
         if (!user) return
         try {
@@ -201,9 +229,40 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
         if (!user) return
         await createSubject(Number(id), payload, user.email ?? "", user.memberName ?? "")
         setShowNewForm(false)
-        await refreshSubjects()
+        // refreshAll et non refreshSubjects : le scrutin peut être rattaché à un
+        // point, et c'est la séance qui porte ce regroupement.
+        await refreshAll()
         toast({ title: "Sujet créé", description: payload.title })
     }
+
+    const agendaPoints: any[] = agSession?.agendaItems ?? []
+
+    /** Les scrutins déjà affichés sous un point ne sont pas répétés plus bas. */
+    const assignedIds = new Set(
+        agendaPoints.flatMap((p: any) => (p.voteSubjects ?? []).map((v: any) => v.id))
+    )
+    const unassignedSubjects = subjects.filter((s: any) => !assignedIds.has(s.id))
+
+    /**
+     * La carte de vote est rendue au même endroit pour la liste générale et pour
+     * les points de l'ordre du jour : une seule définition, un seul comportement.
+     */
+    const renderSubject = (subject: any) => (
+        <VoteSubjectCard
+            key={subject.id}
+            subject={subject}
+            isPresident={isPresident}
+            liveResult={liveResults[subject.id]}
+            open={expanded[subject.id] ?? false}
+            onToggle={() => toggleSubject(subject.id)}
+            onVote={handleVote}
+            onOpen={handleOpen}
+            onClose={handleClose}
+            onDelete={handleDeleteSubject}
+            voting={voting[subject.id] ?? false}
+            proxyFor={myProxy?.grantorName ?? null}
+        />
+    )
 
     if (loading) return (
         <MemberShell>
@@ -259,13 +318,21 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
                     </div>
                 </div>
 
-                {/* Ordre du jour */}
-                <SessionAgenda items={agSession?.agendaItems} />
+                {/* Ordre du jour, avec les scrutins rattachés à chaque point */}
+                <SessionAgenda
+                    sessionId={Number(id)}
+                    items={agSession?.agendaItems ?? []}
+                    isPresident={isPresident}
+                    onReload={refreshAll}
+                    renderSubject={renderSubject}
+                />
 
-                {/* Sujets de vote */}
+                {/* Scrutins non rattachés à un point */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-semibold text-lg">Sujets de vote</h2>
+                        <h2 className="font-semibold text-lg">
+                            {agendaPoints.length > 0 ? "Autres scrutins" : "Sujets de vote"}
+                        </h2>
                         {isPresident && (
                             <button
                                 onClick={() => setShowNewForm(v => !v)}
@@ -279,34 +346,27 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
 
                     {showNewForm && isPresident && (
                         <NewSubjectForm
+                            agendaPoints={agendaPoints}
                             onCancel={() => setShowNewForm(false)}
                             onCreate={handleCreateSubject}
                             onError={(msg: string) => toast({ title: "Erreur", description: msg, variant: "destructive" })}
                         />
                     )}
 
-                    {subjects.length === 0 ? (
+                    {unassignedSubjects.length === 0 ? (
                         <div className="text-center py-16 border border-border rounded-2xl text-muted-foreground">
                             <VoteIcon className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                            <p className="font-medium mb-1">Aucun sujet de vote pour cette session</p>
-                            {isPresident && <p className="text-sm opacity-70">Créez le premier sujet ci-dessus.</p>}
+                            <p className="font-medium mb-1">
+                                {agendaPoints.length > 0
+                                    ? "Tous les scrutins sont rattachés à un point"
+                                    : "Aucun sujet de vote pour cette session"}
+                            </p>
+                            {isPresident && agendaPoints.length === 0 && (
+                                <p className="text-sm opacity-70">Créez le premier sujet ci-dessus.</p>
+                            )}
                         </div>
                     ) : (
-                        subjects.map((subject: any) => (
-                            <VoteSubjectCard
-                                key={subject.id}
-                                subject={subject}
-                                isPresident={isPresident}
-                                liveResult={liveResults[subject.id]}
-                                open={expanded[subject.id] ?? false}
-                                onToggle={() => toggleSubject(subject.id)}
-                                onVote={handleVote}
-                                onOpen={handleOpen}
-                                onClose={handleClose}
-                                voting={voting[subject.id] ?? false}
-                                proxyFor={myProxy?.grantorName ?? null}
-                            />
-                        ))
+                        unassignedSubjects.map((subject: any) => renderSubject(subject))
                     )}
                 </div>
 
@@ -335,12 +395,15 @@ export default function AGSessionPage({ params }: { params: Promise<{ id: string
 // ── Création d'un sujet : motion binaire ou scrutin à candidats ───────────────
 
 function NewSubjectForm({
-    onCreate, onCancel, onError,
+    agendaPoints, onCreate, onCancel, onError,
 }: {
+    /** Points de l'ordre du jour auxquels rattacher le scrutin. */
+    agendaPoints: any[]
     onCreate: (payload: any) => Promise<void>
     onCancel: () => void
     onError: (msg: string) => void
 }) {
+    const [agendaItemId, setAgendaItemId] = useState("")
     const [type, setType] = useState<"BINAIRE" | "CHOIX">("BINAIRE")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -360,6 +423,8 @@ function NewSubjectForm({
             await onCreate({
                 title: title.trim(),
                 description: description.trim(),
+                // Vide = scrutin improvisé, il reste hors de l'ordre du jour.
+                agendaItemId: agendaItemId ? Number(agendaItemId) : null,
                 type,
                 options: type === "CHOIX"
                     ? filledCandidates.map(c => ({ label: c.label.trim(), description: c.description.trim() }))
@@ -375,6 +440,25 @@ function NewSubjectForm({
     return (
         <div className="border border-primary/30 bg-primary/5 rounded-2xl p-5 space-y-4">
             <h3 className="font-medium text-sm">Nouveau sujet de vote</h3>
+
+            {/* Rattachement à un point de l'ordre du jour */}
+            {agendaPoints.length > 0 && (
+                <div className="space-y-1.5">
+                    <label className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                        Point de l'ordre du jour
+                    </label>
+                    <select
+                        value={agendaItemId}
+                        onChange={e => setAgendaItemId(e.target.value)}
+                        className="w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
+                    >
+                        <option value="">Aucun — scrutin hors ordre du jour</option>
+                        {agendaPoints.map((p: any) => (
+                            <option key={p.id} value={p.id}>{p.number}. {p.label}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
             {/* Type de scrutin */}
             <div className="grid grid-cols-2 gap-2">
@@ -490,7 +574,7 @@ function NewSubjectForm({
 // ── Carte sujet (accordéon) ───────────────────────────────────────────────────
 
 function VoteSubjectCard({
-    subject, isPresident, liveResult, open, onToggle, onVote, onOpen, onClose, voting, proxyFor,
+    subject, isPresident, liveResult, open, onToggle, onVote, onOpen, onClose, onDelete, voting, proxyFor,
 }: {
     subject: any
     isPresident: boolean
@@ -500,6 +584,7 @@ function VoteSubjectCard({
     onVote: (subject: any, ballot: { choice?: string; optionId?: number }) => Promise<void>
     onOpen: (id: number) => Promise<void>
     onClose: (id: number) => Promise<void>
+    onDelete: (id: number) => Promise<void>
     voting: boolean
     /** Nom du membre absent dont le votant porte la procuration, le cas échéant. */
     proxyFor?: string | null
@@ -591,6 +676,16 @@ function VoteSubjectCard({
                             className="flex items-center gap-1.5 bg-red-500/15 border border-red-500/30 text-red-700 dark:text-red-300 text-xs px-3 py-1.5 rounded-lg hover:bg-red-500/25 transition-all active:scale-95"
                         >
                             <Square className="w-3 h-3" />Fermer
+                        </button>
+                    )}
+                    {isPresident && (
+                        <button
+                            onClick={() => onDelete(subject.id)}
+                            title="Supprimer ce scrutin"
+                            aria-label="Supprimer ce scrutin"
+                            className="flex items-center justify-center w-8 h-8 rounded-lg border border-border text-muted-foreground hover:text-red-600 hover:border-red-500/40 hover:bg-red-500/10 transition-all active:scale-95"
+                        >
+                            <Trash2 className="w-3.5 h-3.5" />
                         </button>
                     )}
                 </div>

@@ -3,7 +3,7 @@
 import MemberShell from "@/components/membres/MemberShell"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { getDocuments, getSessions, deleteMyDocument } from "@/lib/members-api"
+import { getDocuments, getSessions, deleteMyDocument, documentFileUrl } from "@/lib/members-api"
 import { formatFileSize } from "@/lib/utils"
 import { FileText, Download, Calendar, User, Filter, Paperclip, Link2, Trash2, Plus } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
@@ -15,7 +15,11 @@ const DOC_TYPES = [
     { key: "PV", label: "Procès-verbaux" },
     { key: "DECISION", label: "Décisions & résolutions" },
     { key: "RAPPORT", label: "Rapports" },
+    { key: "ROI", label: "ROI" },
+    { key: "STATUTS", label: "Statuts" },
+    { key: "PROCURATION", label: "Procurations" },
     { key: "ACTUALITE", label: "Actualités" },
+    { key: "AUTRE", label: "Autres" },
 ]
 
 const TYPE_ICONS: Record<string, string> = {
@@ -23,7 +27,11 @@ const TYPE_ICONS: Record<string, string> = {
     PV: "📝",
     DECISION: "⚖️",
     RAPPORT: "📊",
+    ROI: "📕",
+    STATUTS: "🏛️",
+    PROCURATION: "✍️",
     ACTUALITE: "📢",
+    AUTRE: "📄",
 }
 
 export default function BibliothequePage() {
@@ -187,7 +195,8 @@ export default function BibliothequePage() {
                                                     {doc.type.replace(/_/g, " ")}
                                                 </span>
                                                 {doc.fileUrl && (
-                                                    <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer"
+                                                    <a href={doc.fileName ? documentFileUrl(doc.id, true) : doc.fileUrl}
+                                                       target="_blank" rel="noopener noreferrer"
                                                         className="flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary text-xs px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-all">
                                                         {hosted ? <Download className="w-3 h-3" /> : <Link2 className="w-3 h-3" />}
                                                         {hosted ? "Télécharger" : "Ouvrir le lien"}

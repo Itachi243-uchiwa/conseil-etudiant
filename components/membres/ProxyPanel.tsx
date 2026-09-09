@@ -15,8 +15,13 @@ import {
  * Procurations d'une séance.
  *
  * Un membre absent confie sa voix à un membre présent : celui-ci déclare le
- * mandant et joint le PDF signé. Une seule procuration par personne — le porteur
- * vote alors deux fois, sa voix et celle du mandant partant dans le même sens.
+ * mandant, et joint le PDF signé s'il en dispose. Une seule procuration par
+ * personne : le porteur vote alors deux fois, sa voix et celle du mandant partant
+ * dans le même sens.
+ *
+ * La présidence de séance peut en plus encoder au nom d'un tiers, via le sélecteur
+ * de mandataire. Elle ne devient pas porteuse pour autant : c'est le mandataire
+ * désigné qui votera, et le backend le vérifie.
  */
 export default function ProxyPanel({
     sessionId,
@@ -92,7 +97,7 @@ export default function ProxyPanel({
     }, [showForm, members.length])
 
     const submit = async () => {
-        if (!user || !grantorEmail || !file || submitting) return
+        if (!user || !grantorEmail || submitting) return
         setSubmitting(true)
         try {
             await createProxy(
@@ -191,8 +196,9 @@ export default function ProxyPanel({
                     <div>
                         <h3 className="font-medium text-sm">Nouvelle procuration</h3>
                         <p className="text-xs text-muted-foreground mt-1">
-                            Désignez le membre absent qui vous confie sa voix et joignez sa procuration signée (PDF).
-                            Déposez-la avant l'ouverture des votes : elle ne s'applique qu'aux votes à venir.
+                            Désignez le membre absent qui confie sa voix. Le PDF signé est facultatif :
+                            joignez-le si vous l'avez. Encodez avant l'ouverture des votes, une procuration
+                            ne s'applique qu'aux scrutins à venir.
                         </p>
                     </div>
 
@@ -249,7 +255,7 @@ export default function ProxyPanel({
 
                     <div className="space-y-1.5">
                         <label className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                            Procuration signée (PDF) *
+                            Procuration signée (PDF) — facultatif
                         </label>
                         <FileDropzone
                             file={file}
@@ -265,7 +271,7 @@ export default function ProxyPanel({
                     <div className="flex gap-2">
                         <button
                             onClick={submit}
-                            disabled={!grantorEmail || !file || submitting}
+                            disabled={!grantorEmail || submitting}
                             className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-primary-foreground text-sm px-4 py-2 rounded-xl transition-all active:scale-95"
                         >
                             {submitting ? "Envoi…" : "Enregistrer"}

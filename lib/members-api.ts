@@ -121,6 +121,52 @@ export async function getResults(subjectId: number) {
     return res.ok ? res.json() : null
 }
 
+// ── Ordre du jour ─────────────────────────────────────────────────────────────
+
+export async function getAgenda(sessionId: number) {
+    const res = await fetch(`${BASE}/members/sessions/${sessionId}/agenda`, { cache: "no-store" })
+    return res.ok ? res.json() : []
+}
+
+/**
+ * Enregistre l'ordre du jour complet. Les points existants gardent leur `id` :
+ * c'est ce qui préserve le rattachement des scrutins après un renommage ou un
+ * déplacement.
+ */
+export async function saveAgenda(sessionId: number, items: unknown[], email: string, name: string) {
+    const result = await memberFetch(`/members/sessions/${sessionId}/agenda`, email, name, {
+        method: "PUT",
+        body: JSON.stringify(items),
+    })
+    bust(`session:${sessionId}`)
+    return result
+}
+
+export async function setAgendaItemDone(itemId: number, done: boolean, email: string, name: string) {
+    return memberFetch(`/members/agenda/${itemId}/done?done=${done}`, email, name, { method: "PATCH" })
+}
+
+/** Retire un scrutin et tout ce qui s'y rattache. Réservé à la présidence de séance. */
+export async function deleteVoteSubject(subjectId: number, email: string, name: string) {
+    return memberFetch(`/members/subjects/${subjectId}`, email, name, { method: "DELETE" })
+}
+
+// ── Fichiers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Cloudinary sert les documents sous leur identifiant technique et avec un type
+ * MIME générique : le navigateur télécharge un fichier au nom illisible et refuse
+ * de l'afficher. Le backend expose un relais qui rétablit le vrai nom et le bon
+ * type, y compris pour les fichiers déposés avant la correction.
+ */
+export function documentFileUrl(documentId: number, download = false) {
+    return `${BASE}/members/documents/${documentId}/file?download=${download}`
+}
+
+export function proxyFileUrl(proxyId: number, download = false) {
+    return `${BASE}/members/proxies/${proxyId}/file?download=${download}`
+}
+
 // ── Procurations ──────────────────────────────────────────────────────────────
 
 /** Liste des membres de l'équipe — sert à désigner le mandant d'une procuration. */
